@@ -41,7 +41,7 @@ export default function RootLayout({
           <Menu />
         </div>
 
-        <div className="p-4">
+        <div className="p-4 w-full">
           {children}
         </div>
       </body>
