@@ -13,6 +13,8 @@ import { Kanban, Pencil, RefreshCcw, X, Trash2 } from "lucide-react";
 import { RemoverProjeto } from "./removerProjeto";
 import { EditarProjeto } from "./editarProjeto";
 import { Projeto } from "@/core/interface/Projeto";
+import Link from "next/link";
+
 
 interface CardProjetoProps {
     projeto: Projeto;
@@ -34,8 +36,16 @@ export const CardProjeto = ({ projeto, onRemove, onEdit }: CardProjetoProps) => 
             </CardContent>
             <CardFooter className="p-0 w-full flex items-end">
                 <CardAction className="flex w-full p-0 gap-2 justify-end px-2">
-                        <Button className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"> <Kanban /> </Button>
-                        <Button className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"> <RefreshCcw /> </Button>
+                    <Button title="Kanban" asChild className="bg-azul-claro hover:bg-transparent hover:cursor-pointer">
+                        <Link  href={"/kanban"} className="">
+                         <Kanban />
+                        </Link>
+                    </Button>
+                    <Button title="Ciclos" asChild className="bg-azul-claro hover:bg-transparent hover:cursor-pointer">
+                        <Link href={"/ciclo"} className="">
+                            <RefreshCcw />
+                        </Link>
+                    </Button>
                         <EditarProjeto projeto={projeto} onEdit={onEdit} />
                         <RemoverProjeto  projeto={projeto} onRemove={onRemove} />
                 </CardAction>
