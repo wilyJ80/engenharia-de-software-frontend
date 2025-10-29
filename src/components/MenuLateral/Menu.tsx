@@ -3,12 +3,19 @@ import { usePathname } from "next/navigation";
 import MenuItem from "../MenuItem/MenuItem";
 import Link from "next/link";
 
-const menuItems = [
-    "Projeto",
-    "Fase",
-    "Artefato",
-    "Usuário"
-];
+const menuItems = [{
+    nome: "Projeto",
+    link: "/projeto",
+},{
+    nome: "Fase",
+    link: "/fase",
+},{
+    nome: "Artefato",
+    link: "/artefato",
+},{
+    nome: "Usuário",
+    link: "/user_management",
+}];
 
 export default function Menu() {
     const url = usePathname();
@@ -24,8 +31,8 @@ export default function Menu() {
             >
                 {
                     menuItems.map((item, index) => (
-                        <MenuItem className={`${url === `/${item.toLocaleLowerCase()}` ? "bg-azul-claro" : "bg-white"}`} key={index}>
-                            <Link href={`/${item.toLocaleLowerCase()}`} className="">{item}</Link>
+                        <MenuItem className={`${url === item.link ? "bg-azul-claro" : "bg-white"}`} key={index}>
+                            <Link href={item.link} className="">{item.nome}</Link>
                         </MenuItem>
                     ))
                 }
