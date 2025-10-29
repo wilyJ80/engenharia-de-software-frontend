@@ -10,7 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 export default function ConfirmDialog({
   open,
@@ -31,8 +31,30 @@ export default function ConfirmDialog({
   onConfirm?: () => void;
   children: ReactNode; // trigger element
 }) {
+  const controlled = open !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const effectiveOpen = controlled ? open! : internalOpen;
+
+  const handleOpenChange = (v: boolean) => {
+    if (controlled) {
+      onOpenChange?.(v);
+    } else {
+      setInternalOpen(v);
+    }
+  };
+
+  const handleCancel = () => {
+    handleOpenChange(false);
+  };
+
+  const handleConfirm = () => {
+    onConfirm?.();
+    handleOpenChange(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={effectiveOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
@@ -41,16 +63,10 @@ export default function ConfirmDialog({
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange?.(false)}>
+          <Button variant="ghost" onClick={handleCancel}>
             {cancelLabel}
           </Button>
-          <Button
-            className="bg-red-600 hover:bg-red-700 text-white"
-            onClick={() => {
-              onConfirm?.();
-              onOpenChange?.(false);
-            }}
-          >
+          <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={handleConfirm}>
             {confirmLabel}
           </Button>
         </DialogFooter>
