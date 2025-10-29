@@ -6,7 +6,7 @@ export const getUsuarios = async (): Promise<Usuario[]> => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
     });
     if (!response.ok) {
@@ -21,7 +21,7 @@ export const getUsuarioById = async (id: string) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
     });
     if (!response.ok) {
@@ -36,7 +36,7 @@ export const updateUsuario = async (id: string, data: { nome: string; email: str
         method: 'PUT',  
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(data),
     });
@@ -51,7 +51,7 @@ export const deleteUsuario = async (id: string) => {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
     });
     if (!response.ok) {
@@ -66,7 +66,7 @@ export const createUsuario = async (data: { nome: string; email: string, senha: 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwt}`,
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(data),
     });

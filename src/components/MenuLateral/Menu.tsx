@@ -2,21 +2,7 @@
 import { usePathname } from "next/navigation";
 import MenuItem from "../MenuItem/MenuItem";
 import Link from "next/link";
-
-const menuItems = [{
-    nome: "Projeto",
-    link: "/projeto",
-},{
-    nome: "Fase",
-    link: "/fase",
-},{
-    nome: "Artefato",
-    link: "/artefato",
-},{
-    nome: "Usuário",
-    link:"/user_manager",
-}];
-
+import { ItensMenu } from "@/core/constants/ItensMenu";
 export default function Menu() {
     const url = usePathname();
     return (
@@ -30,9 +16,9 @@ export default function Menu() {
                 "
             >
                 {
-                    menuItems.map((item, index) => (
+                    ItensMenu.map((item, index) => (
                         <MenuItem className={`${url === item.link ? "bg-azul-claro" : "bg-white"}`} key={index}>
-                            <Link href={item.link} className="">{item.nome}</Link>
+                            <Link  href={item.link} className="flex gap-4">{item.icons}{item.nome_item}</Link>
                         </MenuItem>
                     ))
                 }

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Eye, EyeOff } from "lucide-react";
-import { login } from "@/service/AuthService";
+import { login } from "@/core/service/AuthService";
 import { useRouter } from "next/navigation";
 export const FormLogin = () => {
   const [email, setEmail] = useState("");

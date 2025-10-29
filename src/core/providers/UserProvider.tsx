@@ -1,6 +1,6 @@
 "use client";
 
-import { login, me } from "@/service/AuthService";
+import { login, me } from "@/core/service/AuthService";
 import { useRouter } from "next/navigation";
 import { createContext , useState, useContext, useEffect } from "react";
 import { Usuario } from "../interface/Usuario";
