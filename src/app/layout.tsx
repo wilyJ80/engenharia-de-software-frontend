@@ -32,7 +32,7 @@ export default function RootLayout({
         `}
       >
         <div
-          className="w-[300px] flex flex-col items-center"
+          className="w-[400px] flex flex-col items-center"
           style={{
             boxShadow: "2px 0 3px rgba(0, 0, 0, .4)"
           }}
@@ -41,7 +41,7 @@ export default function RootLayout({
           <Menu />
         </div>
 
-        <div className="p-4">
+        <div className="p-4 w-full">
           {children}
         </div>
       </body>
