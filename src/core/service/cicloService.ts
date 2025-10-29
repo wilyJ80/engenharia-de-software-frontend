@@ -1,5 +1,7 @@
+const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
 async function visualizarCiclo() {
-    const response = await fetch('http://localhost:8000/ciclos/', {
+    const response = await fetch(`${urlBase}/ciclos/`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });
@@ -21,7 +23,7 @@ async function visualizarCiclo() {
 }
 
 async function criarCiclo(dados: { nome: string; versao: string; projeto_id?: string }) {
-    const response = await fetch('http://localhost:8000/ciclos/', {
+    const response = await fetch(`${urlBase}/ciclos/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados),
@@ -47,7 +49,7 @@ async function criarCiclo(dados: { nome: string; versao: string; projeto_id?: st
 }
 
 async function atualizarCiclo(id: string, dados: { nome: string; versao: string; projeto_id?: string }) {
-    const response = await fetch(`http://localhost:8000/ciclos/${encodeURIComponent(id)}`, {
+    const response = await fetch(`${urlBase}/ciclos/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados),
@@ -72,7 +74,7 @@ async function atualizarCiclo(id: string, dados: { nome: string; versao: string;
 }
 
 async function deletarCiclo(id: string) {
-    const response = await fetch(`http://localhost:8000/ciclos/${encodeURIComponent(id)}`, {
+    const response = await fetch(`${urlBase}/ciclos/${encodeURIComponent(id)}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
     });
