@@ -1,7 +1,10 @@
 import { Projeto } from "../interface/Projeto";
 
+const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
+
 export const getProjetos = async (): Promise<Projeto[]> => {
-    const response = await fetch(`http://localhost:8000/projetos`, {
+    const response = await fetch(`${urlBase}/projetos`, {
         method: 'GET',
     });
     if (!response.ok) {
@@ -13,7 +16,7 @@ export const getProjetos = async (): Promise<Projeto[]> => {
 
 
 export const createProjecto = async (data: { nome: string; descritivo: string }) => {
-    const response = await fetch(`http://localhost:8000/projetos`, {
+    const response = await fetch(`${urlBase}/projetos`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +30,7 @@ export const createProjecto = async (data: { nome: string; descritivo: string })
 }
 
 export const updateProjeto = async (id: string, data: { nome: string; descritivo: string}) => {
-    const response = await fetch(`http://localhost:8000/projetos/${id}`, {
+    const response = await fetch(`${urlBase}/projetos/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +43,7 @@ export const updateProjeto = async (id: string, data: { nome: string; descritivo
     return response.json();
 }
 export const deleteProjeto = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/projetos/${id}`, {
+    const response = await fetch(`${urlBase}/projetos/${id}`, {
         method: 'DELETE',
     });
     if (!response.ok) {
