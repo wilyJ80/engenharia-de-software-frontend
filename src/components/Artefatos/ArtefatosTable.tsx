@@ -3,11 +3,11 @@
 import React from 'react'
 
 type Artefato = {
-  id?: number
+  id?: string | number
   name: string
 }
 
-export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Artefato[]; onEdit?: (item: Artefato) => void; onRemove?: (id?: number) => void; }) {
+export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Artefato[]; onEdit?: (item: Artefato) => void; onRemove?: (id?: string | number) => void; }) {
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-full border-separate border-spacing-1">

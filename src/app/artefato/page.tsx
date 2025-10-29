@@ -2,26 +2,60 @@
 
 import ArtefatoDialog from "@/components/Artefatos/ArtefatoDialog"
 import ArtefatosTable from "../../components/Artefatos/ArtefatosTable"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { visualizarArtefato, criarArtefato } from "@/service/artefatoService"
 
 type Artefato = {
-  id?: number
+  id?: string | number
   name: string
 }
 
 export default function artefato() {
-  const [artefatos, setArtefatos] = useState<Artefato[]>([
-    { id: 1, name: 'Especificação de Requisitos' },
-    { id: 2, name: 'Diagrama de Caso de Uso' },
-    { id: 3, name: 'Plano de Testes' },
-  ])
+  // const [artefatos, setArtefatos] = useState<Artefato[]>([
+  //   { id: 1, name: 'Especificação de Requisitos' },
+  //   { id: 2, name: 'Diagrama de Caso de Uso' },
+  //   { id: 3, name: 'Plano de Testes' },
+  // ])
+
+  const [artefatos, setArtefatos] = useState<Artefato[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function carregarArtefatos() {
+      try {
+        setLoading(true);
+        const data = await visualizarArtefato();
+        setArtefatos(data);
+      } catch (err: any) {
+        setError(err.message ?? "Erro ao carregar artefatos");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarArtefatos();
+  }, []);
+
 
   // estado para edição (diálogo controlado)
   const [selected, setSelected] = useState<Artefato | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleAddArtefato = (novoArtefato: Artefato) => {
-    setArtefatos(prev => [...prev, novoArtefato])
+    // Quando o diálogo cria um novo artefato, persistir no backend
+    (async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const created = await criarArtefato(novoArtefato.name)
+        setArtefatos(prev => [...prev, created])
+      } catch (err: any) {
+        setError(err.message ?? 'Erro ao criar artefato')
+      } finally {
+        setLoading(false)
+      }
+    })()
   }
 
   const handleEditClick = (item: Artefato) => {
@@ -40,7 +74,7 @@ export default function artefato() {
     setDialogOpen(false)
   }
 
-  const handleRemove = (id?: number) => {
+  const handleRemove = (id?: string | number) => {
     if (id == null) return
     setArtefatos(prev => prev.filter(a => a.id !== id))
   }
@@ -56,9 +90,20 @@ export default function artefato() {
         <ArtefatoDialog onAdd={handleAddArtefato} />
       </div>
 
-      <div className="flex mx-48">
-        <ArtefatosTable items={artefatos} onEdit={handleEditClick} onRemove={handleRemove} />
-      </div>
+      {loading && (
+        <div className="mx-48 text-gray-600">Carregando artefatos...</div>
+      )}
+      {error && <div className="mx-48 text-red-600">{error}</div>}
+
+      {!loading && !error && (
+        <div className="flex mx-48">
+          <ArtefatosTable
+            items={artefatos}
+            onEdit={handleEditClick}
+            onRemove={handleRemove}
+          />
+        </div>
+      )}
 
       {/* instância controlada para edição (sem trigger) */}
       <ArtefatoDialog

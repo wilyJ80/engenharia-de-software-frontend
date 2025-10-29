@@ -15,7 +15,7 @@ import { Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 
 type ArtefatoItem = {
-  id?: number;
+  id?: string | number;
   name: string;
 };
 
