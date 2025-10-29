@@ -1,5 +1,7 @@
+const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
 async function visualizarArtefato() {
-    const response = await fetch('http://localhost:8000/artefatos/', {
+    const response = await fetch(`${urlBase}/artefatos/`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });
@@ -15,7 +17,7 @@ async function visualizarArtefato() {
 }
 
 async function criarArtefato(nome: string) {
-  const response = await fetch('http://localhost:8000/artefatos/', {
+  const response = await fetch(`${urlBase}/artefatos/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome }),
@@ -37,7 +39,7 @@ async function criarArtefato(nome: string) {
 }
 
 async function atualizarArtefato(id: string | number, nome: string) {
-  const response = await fetch(`http://localhost:8000/artefatos/${encodeURIComponent(String(id))}`, {
+  const response = await fetch(`${urlBase}/artefatos/${encodeURIComponent(String(id))}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome }),
@@ -58,7 +60,7 @@ async function atualizarArtefato(id: string | number, nome: string) {
 }
 
 async function deletarArtefato(id: string | number) {
-  const response = await fetch(`http://localhost:8000/artefatos/${encodeURIComponent(String(id))}`, {
+  const response = await fetch(`${urlBase}/artefatos/${encodeURIComponent(String(id))}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   });

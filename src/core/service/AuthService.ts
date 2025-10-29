@@ -1,5 +1,7 @@
+const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
 export const login = async (email: string, senha: string) => {
-    const response = await fetch('http://localhost:8000/usuarios/login', {
+    const response = await fetch(`${urlBase}/usuarios/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -15,7 +17,7 @@ export const login = async (email: string, senha: string) => {
 }
 
 export const me = async () => {
-    const response = await fetch('http://localhost:8000/usuarios/me', {
+    const response = await fetch(`${urlBase}/usuarios/me`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

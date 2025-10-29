@@ -1,8 +1,10 @@
+const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
 import { Usuario } from "../interface/Usuario";
 
- const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOWZmYjYzNC1mOWVkLTRlYjUtYmZmMi1jZmEzN2Y0NTRhZWUiLCJleHAiOjE3NjE3NjYyNTF9.uAxO1-4vd2-ZiegN66chTWJ7npTQWOh6Zb9LpBxNiJs"
+const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOWZmYjYzNC1mOWVkLTRlYjUtYmZmMi1jZmEzN2Y0NTRhZWUiLCJleHAiOjE3NjE3NjYyNTF9.uAxO1-4vd2-ZiegN66chTWJ7npTQWOh6Zb9LpBxNiJs"
 export const getUsuarios = async (): Promise<Usuario[]> => {
-    const response = await fetch('http://localhost:8000/usuarios/', {
+    const response = await fetch(`${urlBase}/usuarios/`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +19,7 @@ export const getUsuarios = async (): Promise<Usuario[]> => {
     return data || [];
 };
 export const getUsuarioById = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
+    const response = await fetch(`${urlBase}/usuarios/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +34,7 @@ export const getUsuarioById = async (id: string) => {
 
 export const updateUsuario = async (id: string, data: { nome: string; email: string, senha: string }) => {
     console.log(data)
-    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
+    const response = await fetch(`${urlBase}/usuarios/${id}`, {
         method: 'PUT',  
         headers: {
             'Content-Type': 'application/json',
@@ -47,7 +49,7 @@ export const updateUsuario = async (id: string, data: { nome: string; email: str
 };
 
 export const deleteUsuario = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
+    const response = await fetch(`${urlBase}/usuarios/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -62,7 +64,7 @@ export const deleteUsuario = async (id: string) => {
 
 
 export const createUsuario = async (data: { nome: string; email: string, senha: string }) => {
-    const response = await fetch('http://localhost:8000/usuarios/registro', {
+    const response = await fetch(`${urlBase}/usuarios/registro`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
