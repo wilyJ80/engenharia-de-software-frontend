@@ -5,14 +5,23 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Eye, EyeOff } from "lucide-react";
-
+import { login } from "@/service/AuthService";
+import { useRouter } from "next/navigation";
 export const FormLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const data = await login(email, password);
+      localStorage.setItem("token", data.access_token);
+      console.log(localStorage.getItem("token"));
+      router.push("/");
+    } catch (error) {
+        console.error(error);
+    }
 
   };
 
@@ -21,8 +30,6 @@ export const FormLogin = () => {
       onSubmit={handleSubmit}
       className="flex flex-col gap-6 w-full max-w-sm text-white bg-azul-escuro p-6 rounded-md"
     >
-      {/* Campo de 
-      Email */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="email" className="text-sm font-medium text-white">
           Email:
@@ -34,7 +41,7 @@ export const FormLogin = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Digite seu email"
-          className="border border-gray-300 rounded-md p-2 text-black"
+          className="border border-gray-300 bg-white rounded-md p-2 text-black placeholder"
         />
       </div>
 
@@ -51,7 +58,7 @@ export const FormLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Digite sua senha"
-            className="border border-gray-300 rounded-md p-2 pr-10 text-black w-full"
+            className="border border-gray-300 bg-white rounded-md p-2 pr-10 text-black w-full"
           />
           <button
             type="button"
@@ -67,14 +74,14 @@ export const FormLogin = () => {
       <Button
         type="submit"
         className="
-          bg-white
-          text-black
+          bg-azul-escuro
+          text-white
           rounded-md
           p-2
           text-sm
           font-semibold
           border border-gray-400
-          hover:bg-[#00AFEF]
+          hover:bg-azul-claro
           cursor-pointer
           transition-colors
           duration-200
