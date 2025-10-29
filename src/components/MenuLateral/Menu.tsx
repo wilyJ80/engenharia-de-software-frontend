@@ -1,3 +1,5 @@
+'use client'
+import { usePathname } from "next/navigation";
 import MenuItem from "../MenuItem/MenuItem";
 import Link from "next/link";
 
@@ -9,6 +11,7 @@ const menuItems = [
 ];
 
 export default function Menu() {
+    const url = usePathname();
     return (
         <div className="w-full h-full p-4 flex flex-col items-center bg-azul-escuro">
             <div
@@ -18,12 +21,11 @@ export default function Menu() {
                     bg-azul-escuro w-full h-[500px]
                     rounded-xl px-3  gap-3
                 "
-              
             >
                 {
                     menuItems.map((item, index) => (
-                        <MenuItem key={index}>
-                            <Link href={`/${item}`} className="">{item}</Link>
+                        <MenuItem className={`${url === `/${item.toLocaleLowerCase()}` ? "bg-azul-claro" : "bg-white"}`} key={index}>
+                            <Link href={`/${item.toLocaleLowerCase()}`} className="">{item}</Link>
                         </MenuItem>
                     ))
                 }

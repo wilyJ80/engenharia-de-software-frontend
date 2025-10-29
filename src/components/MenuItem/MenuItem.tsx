@@ -1,18 +1,24 @@
+'use client'
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react"
 
 interface Props {
     children: ReactNode
+    className?: string
 }
-export default function MenuItem({ children }: Props) {
+export default function MenuItem({ children, className }: Props) {
+    const url = usePathname();
+    console.log(url, children?.toString());
     return (
         <div
-            className="
-                
+            className={`
                 justify-center items-center
-                flex p-2 bg-white w-full
+                flex p-2 w-full
                 rounded-md list-none
                 hover:bg-azul-claro hover:cursor-pointer
-            "
+                
+                ${className}
+            `}
         >
             {children}
         </div>
