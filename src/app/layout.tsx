@@ -32,12 +32,12 @@ export default function RootLayout({
         `}
       >
         <div
-          className="w-[300px] flex flex-col items-center pt-10"
+          className="w-[300px] flex flex-col items-center"
           style={{
             boxShadow: "2px 0 3px rgba(0, 0, 0, .4)"
           }}
         >
-          <img src="/logo.png" className="w-[70%]" alt="Logo" />
+          <img src="/logo.png" className="w-[65%]" alt="Logo" />
           <Menu />
         </div>
 

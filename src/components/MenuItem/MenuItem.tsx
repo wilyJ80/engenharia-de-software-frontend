@@ -5,13 +5,16 @@ interface Props {
 }
 export default function MenuItem({ children }: Props) {
     return (
-        <li
+        <div
             className="
+                
+                justify-center items-center
                 flex p-2 bg-white w-full
                 rounded-md list-none
+                hover:bg-azul-claro hover:cursor-pointer
             "
         >
             {children}
-        </li>
+        </div>
     )
 }
