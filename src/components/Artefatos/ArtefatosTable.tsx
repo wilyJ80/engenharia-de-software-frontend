@@ -7,7 +7,7 @@ type Artefato = {
   name: string
 }
 
-export default function ArtefatosTable({ items }: { items: Artefato[] }) {
+export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Artefato[]; onEdit?: (item: Artefato) => void; onRemove?: (id?: number) => void; }) {
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-full border-separate border-spacing-1">
@@ -39,20 +39,14 @@ export default function ArtefatosTable({ items }: { items: Artefato[] }) {
                     <button
                       type="button"
                       className="px-3 py-1 text-sm bg-azul-escuro text-white rounded"
-                      onClick={() => {
-                        // mock action
-                        alert(`Editar: ${item.name}`)
-                      }}
+                      onClick={() => onEdit?.(item)}
                     >
                       Editar
                     </button>
                     <button
                       type="button"
                       className="px-3 py-1 text-sm bg-red-500 text-white rounded"
-                      onClick={() => {
-                        // mock action
-                        alert(`Remover: ${item.name}`)
-                      }}
+                      onClick={() => onRemove?.(item.id)}
                     >
                       Remover
                     </button>
