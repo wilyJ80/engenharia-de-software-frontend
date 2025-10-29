@@ -36,7 +36,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
         
     return (
         <>
-            <Button onClick={() => setOpen(true)} className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"> <Pencil /> </Button>
+            <Button title="Editar" onClick={() => setOpen(true)} className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"> <Pencil /> </Button>
             { open && (
             <Dialog  open={open} onOpenChange={setOpen}>
                <DialogContent className="bg-azul-escuro text-white border-none rounded-md">
