@@ -14,7 +14,7 @@ const menuItems = [{
     link: "/artefato",
 },{
     nome: "Usuário",
-    link: "/user_management",
+    link:"/user_manager",
 }];
 
 export default function Menu() {
