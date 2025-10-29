@@ -4,6 +4,7 @@ import ArtefatoDialog from "@/components/Artefatos/ArtefatoDialog"
 import ArtefatosTable from "../../components/Artefatos/ArtefatosTable"
 import { useEffect, useState } from "react"
 import { visualizarArtefato, criarArtefato, atualizarArtefato, deletarArtefato } from "@/service/artefatoService"
+import { toast } from 'sonner'
 
 type Artefato = {
   id?: string | number
@@ -45,8 +46,10 @@ export default function artefato() {
         setError(null)
         const created = await criarArtefato(novoArtefato.name)
         setArtefatos(prev => [...prev, created])
+        toast.success('Artefato criado com sucesso')
       } catch (err: any) {
         setError(err.message ?? 'Erro ao criar artefato')
+        toast.error(err.message ?? 'Erro ao criar artefato')
       } finally {
         setLoading(false)
       }
@@ -66,8 +69,10 @@ export default function artefato() {
         setError(null)
         const updated = await atualizarArtefato(item.id, item.name)
         setArtefatos(prev => prev.map(a => (a.id === updated.id ? updated : a)))
+          toast.success('Artefato atualizado com sucesso')
       } catch (err: any) {
         setError(err.message ?? 'Erro ao atualizar artefato')
+          toast.error(err.message ?? 'Erro ao atualizar artefato')
       } finally {
         setLoading(false)
       }
@@ -89,8 +94,10 @@ export default function artefato() {
         setError(null)
         await deletarArtefato(id)
         setArtefatos(prev => prev.filter(a => a.id !== id))
+        toast.success('Artefato removido com sucesso')
       } catch (err: any) {
         setError(err.message ?? 'Erro ao deletar artefato')
+        toast.error(err.message ?? 'Erro ao deletar artefato')
       } finally {
         setLoading(false)
       }

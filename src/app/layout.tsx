@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from 'sonner'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Menu from "@/components/MenuLateral/Menu";
@@ -43,6 +44,7 @@ export default function RootLayout({
 
         <div className="p-4 w-full">
           {children}
+          <Toaster position="top-right" />
         </div>
       </body>
     </html>

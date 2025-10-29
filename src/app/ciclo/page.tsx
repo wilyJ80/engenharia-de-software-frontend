@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CicloDialog from "@/components/Ciclos/CicloDialog";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
@@ -11,40 +11,105 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Edit, Settings, Trash } from "lucide-react";
+import { visualizarCiclo, criarCiclo, atualizarCiclo, deletarCiclo } from "@/service/cicloService";
+import { toast } from 'sonner'
 
-const initialCiclos = [
-  { id: 1, name: "Ciclo I - Prospecção", versao: "v1.0" },
-  { id: 2, name: "Ciclo II - Elaboração", versao: "v1.1" },
-  { id: 3, name: "Ciclo III - Sprint III", versao: "v1.0" },
-  { id: 4, name: "Ciclo IV - Sprint II", versao: "v2.0" },
-  { id: 5, name: "Ciclo V - Sprint IV", versao: "v1.2" },
-];
+type Ciclo = {
+  id?: string;
+  name: string;
+  versao: string;
+  projeto_id?: string;
+};
 
 export default function ciclo() {
-  const [ciclos, setCiclos] = useState(initialCiclos);
+  const [ciclos, setCiclos] = useState<Ciclo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState<null | { id: number; name: string; versao: string }>(null);
+  const [itemToEdit, setItemToEdit] = useState<Ciclo | null>(null);
 
-  const handleAdd = (item: { name: string; versao: string }) => {
-    const withId = { ...(item as any), id: Date.now() };
-    setCiclos((prev) => [...prev, withId]);
+  // Carregar ciclos ao montar
+  useEffect(() => {
+    async function carregarCiclos() {
+      try {
+        setLoading(true);
+        const data = await visualizarCiclo();
+        setCiclos(data);
+      } catch (err: any) {
+        setError(err.message ?? "Erro ao carregar ciclos");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarCiclos();
+  }, []);
+
+  const handleAdd = async (item: Ciclo) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const created = await criarCiclo({
+        nome: item.name,
+        versao: item.versao,
+        projeto_id: item.projeto_id,
+      });
+      setCiclos((prev) => [...prev, created]);
+      toast.success('Ciclo criado com sucesso')
+    } catch (err: any) {
+      setError(err.message ?? "Erro ao criar ciclo");
+      toast.error(err.message ?? 'Erro ao criar ciclo')
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEditClick = (item: { id?: number; name: string; versao: string }) => {
+  const handleEditClick = (item: Ciclo) => {
     if (!item.id) return;
-    setItemToEdit({ id: item.id, name: item.name, versao: item.versao });
+    setItemToEdit(item);
     setEditOpen(true);
   };
 
-  const handleSaveEdit = (item: { id?: number; name: string; versao: string }) => {
+  const handleSaveEdit = async (item: Ciclo) => {
     if (!item.id) return;
-    setCiclos((prev) => prev.map((c) => (c.id === item.id ? { ...c, name: item.name, versao: item.versao } : c)));
-    setItemToEdit(null);
-    setEditOpen(false);
+    
+    try {
+      setLoading(true);
+      setError(null);
+      const updated = await atualizarCiclo(item.id, {
+        nome: item.name,
+        versao: item.versao,
+        projeto_id: item.projeto_id,
+      });
+      setCiclos((prev) =>
+        prev.map((c) => (c.id === updated.id ? updated : c))
+      );
+      setItemToEdit(null);
+      setEditOpen(false);
+      toast.success('Ciclo atualizado com sucesso')
+    } catch (err: any) {
+      setError(err.message ?? "Erro ao atualizar ciclo");
+      toast.error(err.message ?? 'Erro ao atualizar ciclo')
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleConfirmDelete = (id: number) => {
-    setCiclos((prev) => prev.filter((c) => c.id !== id));
+  const handleConfirmDelete = async (id?: string) => {
+    if (!id) return;
+    
+    try {
+      setLoading(true);
+      setError(null);
+      await deletarCiclo(id);
+      setCiclos((prev) => prev.filter((c) => c.id !== id));
+      toast.success('Ciclo removido com sucesso')
+    } catch (err: any) {
+      setError(err.message ?? "Erro ao deletar ciclo");
+      toast.error(err.message ?? 'Erro ao deletar ciclo')
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,41 +119,49 @@ export default function ciclo() {
         <h1 className="text-lg font-semibold text-azul-escuro">
             Gestão Projeto de Software - Agenda
         </h1>
-        <CicloDialog />
+        <CicloDialog onAdd={handleAdd} />
       </div>
+
+      {loading && (
+        <div className="text-gray-600">Carregando ciclos...</div>
+      )}
+      {error && <div className="text-red-600">{error}</div>}
 
       {/* Cards dos ciclos */}
-      <div className="flex flex-wrap gap-6">
-        {ciclos.map((ciclo) => (
-          <Card key={ciclo.id} className="w-64 bg-azul-escuro text-white">
-            <CardHeader>
-              <CardTitle>{ciclo.name}</CardTitle>
-              <CardDescription>{ciclo.versao}</CardDescription>
-            </CardHeader>
+      {!loading && !error && (
+        <div className="flex flex-wrap gap-6">
+          {ciclos.map((ciclo) => (
+            <Card key={ciclo.id} className="w-64 bg-azul-escuro text-white">
+              <CardHeader>
+                <CardTitle>{ciclo.name}</CardTitle>
+                <CardDescription>{ciclo.versao}</CardDescription>
+              </CardHeader>
 
-            <CardFooter>
-              <div className="flex gap-2 justify-end w-full">
-                <button className="p-1 cursor-pointer">
-                  <Settings size={18} />
-                </button>
-                <button className="p-1 cursor-pointer" onClick={() => handleEditClick(ciclo as any)}>
-                  <Edit size={18} />
-                </button>
-
-                <ConfirmDialog
-                  title="Excluir ciclo"
-                  description={`Tem certeza que deseja excluir '${ciclo.name}'?`}
-                  onConfirm={() => handleConfirmDelete(ciclo.id as number)}
-                >
+              <CardFooter>
+                <div className="flex gap-2 justify-end w-full">
                   <button className="p-1 cursor-pointer">
-                    <Trash size={18} />
+                    <Settings size={18} />
                   </button>
-                </ConfirmDialog>
-              </div>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                  <button className="p-1 cursor-pointer" onClick={() => handleEditClick(ciclo)}>
+                    <Edit size={18} />
+                  </button>
+
+                  <ConfirmDialog
+                    title="Excluir ciclo"
+                    description={`Tem certeza que deseja excluir '${ciclo.name}'?`}
+                    onConfirm={() => handleConfirmDelete(ciclo.id)}
+                  >
+                    <button className="p-1 cursor-pointer">
+                      <Trash size={18} />
+                    </button>
+                  </ConfirmDialog>
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+
       {/* Dialog de edição controlado pelo pai */}
       <CicloDialog
         open={editOpen}
@@ -96,8 +169,6 @@ export default function ciclo() {
         initialItem={itemToEdit ?? undefined}
         onSave={handleSaveEdit}
       />
-
-      
     </div>
   );
 }
