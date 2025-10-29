@@ -10,7 +10,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <UserProvider>
      <>
       <div
         className="w-[400px] flex flex-col items-center"
@@ -26,6 +25,5 @@ export default function RootLayout({
         {children}
       </div>
    </>
-    </UserProvider>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import UserProvider from "@/core/providers/UserProvider";
 
 
 const geistSans = Geist({
@@ -29,10 +30,13 @@ export default function RootLayout({
         className={`
           ${geistSans.variable} ${geistMono.variable} antialiased
           h-screen flex
-        `}
-      >
+          `}
+          >
+        <UserProvider>
           {children}
+          </UserProvider>
       </body>
+      
     </html>
   );
 }

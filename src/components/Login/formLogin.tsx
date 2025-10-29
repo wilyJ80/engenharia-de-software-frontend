@@ -7,18 +7,17 @@ import { Label } from "../ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { login } from "@/core/service/AuthService";
 import { useRouter } from "next/navigation";
+import { useUserContext } from "@/core/providers/UserProvider";
 export const FormLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { loginUser } = useUserContext();
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const data = await login(email, password);
-      localStorage.setItem("token", data.access_token);
-      console.log(localStorage.getItem("token"));
-      router.push("/");
+        await loginUser(email, password)
     } catch (error) {
         console.error(error);
     }

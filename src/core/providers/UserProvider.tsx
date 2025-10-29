@@ -54,6 +54,7 @@ export default function UserProvider({
     try {
       const userData = await login(email, senha);
       setUser(userData);
+      router.push("/");
       return true;
     } catch (error) {
       console.error("Erro no login:", error);
