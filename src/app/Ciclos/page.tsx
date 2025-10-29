@@ -49,9 +49,12 @@ export default function Ciclos() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Cabeçalho com o botão de adicionar ciclo */}
-      <div className="flex justify-end">
-        <CicloDialog onAdd={handleAdd} />
+      {/* Cabeçalho  */}
+      <div className="flex justify-between items-center w-full">
+        <h1 className="text-lg font-semibold text-azul-escuro">
+            Gestão Projeto de Software - Agenda
+        </h1>
+        <CicloDialog />
       </div>
 
       {/* Cards dos ciclos */}
