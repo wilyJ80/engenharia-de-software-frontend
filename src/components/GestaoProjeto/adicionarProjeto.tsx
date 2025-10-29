@@ -26,7 +26,7 @@ const participantesMock = [
     "Eve"
 ];  
 interface AdicionarProjetoProps {
-    onAddProjeto: (novoProjeto: Projeto) => void;
+    onAddProjeto: (novoProjeto: Omit<Projeto, "status">) => void;
 }
 
 export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {

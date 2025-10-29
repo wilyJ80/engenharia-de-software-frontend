@@ -24,13 +24,13 @@ export default function Kanban() {
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
     const [activeId, setActiveId] = useState<string | null>(null);
 
-    const statuses: StatusProjeto[] = ["A_FAZER", "EM_ANDAMENTO", "TESTES_VALIDACAO", "CONCLUIDO"];
+    const statuses: StatusProjeto[] = ["a_fazer", "em_andamento", "testes_validacao", "concluido"];
 
     const [columns, setColumns] = useState<Record<StatusProjeto, Projeto[]>>({
-        A_FAZER: [],
-        EM_ANDAMENTO: [],
-        TESTES_VALIDACAO: [],
-        CONCLUIDO: [],
+        a_fazer: [],
+        em_andamento: [],
+        testes_validacao: [],
+        concluido: [],
     });
 
     const [pendingMove, setPendingMove] = useState<{
@@ -163,20 +163,20 @@ export default function Kanban() {
 
     const formatStatus = (status: StatusProjeto | undefined): string => {
         switch (status) {
-            case "A_FAZER": return "A fazer";
-            case "EM_ANDAMENTO": return "Em andamento";
-            case "TESTES_VALIDACAO": return "Testes / validação";
-            case "CONCLUIDO": return "Concluído";
+            case "a_fazer": return "A fazer";
+            case "em_andamento": return "Em andamento";
+            case "testes_validacao": return "Testes / validação";
+            case "concluido": return "Concluído";
             default: return "";
         }
     };
 
     const getStatusColor = (status: StatusProjeto): string => {
         switch (status) {
-            case "A_FAZER": return "gray";
-            case "EM_ANDAMENTO": return "blue";
-            case "TESTES_VALIDACAO": return "yellow";
-            case "CONCLUIDO": return "darkgreen";
+            case "a_fazer": return "gray";
+            case "em_andamento": return "blue";
+            case "testes_validacao": return "yellow";
+            case "concluido": return "darkgreen";
         }
     };
 
@@ -214,7 +214,7 @@ export default function Kanban() {
                             <SortableContext items={columns[status].map((c) => c.id)} strategy={verticalListSortingStrategy}>
                                 {
                                     
-                                    status !== "A_FAZER" && !status[status.length] && (
+                                    status !== "a_fazer" && !status[status.length] && (
                                         <div className="h-5 w-1 bg-black"/>
                                     )
                                 }

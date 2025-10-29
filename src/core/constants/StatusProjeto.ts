@@ -1,1 +1,1 @@
-export type StatusProjeto = "A_FAZER" | "EM_ANDAMENTO" | "TESTES_VALIDACAO" | "CONCLUIDO";
+export type StatusProjeto = "a_fazer" | "em_andamento" | "testes_validacao" | "concluido";

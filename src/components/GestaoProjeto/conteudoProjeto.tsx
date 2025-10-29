@@ -4,40 +4,45 @@ import { useState } from "react"
 import { AdicionarProjeto } from "./adicionarProjeto"
 import { CardProjeto } from "./cardProjeto"
 import { Projeto } from "@/core/interface/Projeto"
-
+import { StatusProjeto } from "@/core/constants/StatusProjeto"
 
 export const ConteudoProjeto = () => {
-    const [projetos, setProjetos] = useState([
+    const [projetos, setProjetos] = useState<Projeto[]>([
     {
         id: "1",
         nome: "Projeto A",
         descritivo: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text",
+        status: "em_andamento"
     },
     {
         id: "2",
         nome: "Projeto B",
         descritivo: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text",
+        status: "em_andamento"
     },
     {
         id: "3",
         nome: "Projeto C",
         descritivo: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        status: "em_andamento"
     },
     {
         id: "4",
         nome: "Projeto D",
         descritivo: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+        status: "em_andamento"
     },
     {
         id: "5",
         nome: "Projeto E",
         descritivo: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+        status: "em_andamento"
     }  
 ])
 
-    const handleAddProjeto = (novoProjeto: Projeto) => {
+    const handleAddProjeto = (novoProjeto: Omit<Projeto, "status">) => {
         console.log("Adicionando novo projeto:", novoProjeto);
-        setProjetos([...projetos, novoProjeto]);
+        setProjetos([...projetos, { ...novoProjeto, status: "em_andamento" }]);
     }
 
     const handleRemoveProjeto = (idProjeto: string) => {

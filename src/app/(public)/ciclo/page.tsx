@@ -11,8 +11,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Edit, Settings, Trash } from "lucide-react";
-import { visualizarCiclo, criarCiclo, atualizarCiclo, deletarCiclo } from "@/service/cicloService";
 import { toast } from 'sonner'
+import { atualizarCiclo, criarCiclo, deletarCiclo, visualizarCiclo } from "@/core/service/cicloService";
 
 type Ciclo = {
   id?: string;

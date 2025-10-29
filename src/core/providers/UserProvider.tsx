@@ -53,7 +53,7 @@ export default function UserProvider({
     setIsLoading(true);
     try {
       const userData = await login(email, senha);
-      setUser(userData);
+      localStorage.setItem("token", userData.access_token);
       router.push("/");
       return true;
     } catch (error) {

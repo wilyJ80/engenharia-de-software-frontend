@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 export default function GestaoDeProjetos() {
     const etapas = ["Prospecção", "Análise", "Projeto", "Implementação", "Testes", "Implantação"];
 
-    const tarefas = {
+    const tarefas: Record<string, { titulo: string; responsavel: string }[]> = {
         "Prospecção": [
             { titulo: "Proposta Executiva [1h]", responsavel: "Pedro Silva" }
         ],
