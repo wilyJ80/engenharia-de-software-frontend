@@ -46,16 +46,14 @@ export default function UserManager() {
                 console.log("Deletando usuário com ID:", userToDelete);
                 await deleteUsuario(userToDelete);
                 console.log("Usuário deletado com sucesso");
-            }
-        }catch (error) {
-            console.error("Erro ao deletar usuário:", error);
+                setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
         }
+    }catch (error) {
+        console.error("Erro ao deletar usuário:", error);
+    }
 
-        if (userToDelete !== null) {
-            setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
-        }
-        setShowConfirm(false);
-        setUserToDelete(null);
+    setShowConfirm(false);
+    setUserToDelete(null);
     };
 
     const cancelDelete = () => {
@@ -74,7 +72,7 @@ export default function UserManager() {
         try {
             if (userToEdit) {
                 console.log("Editando usuário com ID:", userToEdit.id);
-                const res = await updateUsuario(userToEdit.id, { nome: data.nome, email: data.email});
+                const res = await updateUsuario(userToEdit.id, { nome: data.nome, email: data.email, senha: "123"});
                 console.log("Usuário atualizado:", res);
             }
         } catch (error) {

@@ -1,6 +1,6 @@
 import { Usuario } from "../interface/Usuario";
 
- const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyODg2YjY2ZS1jOWQyLTRmYWEtOGE3YS1mOTJhMTk2ODU5OTMiLCJleHAiOjE3NjE3NjYxMTJ9.QiqJIv81g02AfEoTYXVYmaMNZAiK5R8UlzQBrmFfnIk"
+ const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOWZmYjYzNC1mOWVkLTRlYjUtYmZmMi1jZmEzN2Y0NTRhZWUiLCJleHAiOjE3NjE3NjYyNTF9.uAxO1-4vd2-ZiegN66chTWJ7npTQWOh6Zb9LpBxNiJs"
 export const getUsuarios = async (): Promise<Usuario[]> => {
     const response = await fetch('http://localhost:8000/usuarios/', {
         method: 'GET',
@@ -30,7 +30,7 @@ export const getUsuarioById = async (id: string) => {
     return response.json();
 };
 
-export const updateUsuario = async (id: string, data: { nome: string; email: string }) => {
+export const updateUsuario = async (id: string, data: { nome: string; email: string, senha: string }) => {
     console.log(data)
     const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
         method: 'PUT',  
