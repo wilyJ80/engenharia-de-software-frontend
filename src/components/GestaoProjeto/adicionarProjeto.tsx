@@ -16,6 +16,7 @@ import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "../ui/textarea";
 import { Projeto } from "@/core/interface/Projeto";
+import { on } from "events";
 
 const participantesMock = [
     "Alice",
@@ -31,14 +32,14 @@ interface AdicionarProjetoProps {
 export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState("");
-    const [descricao, setDescricao] = useState("");
+    const [descritivo, setDescritivo] = useState("");
     const [ participantes, setParticipantes ] = useState<string[]>([]);
 
     const onNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNome(e.target.value);
     }
-    const onDescricaoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setDescricao(e.target.value);
+    const onDescritivoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescritivo(e.target.value);
     }
 
     return (
@@ -67,10 +68,10 @@ export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {
                     <div className="flex gap-1 items-center">
                         <Label className="">Descritivo:</Label>
                         <Textarea 
-                                onChange={onDescricaoChange}
+                                onChange={onDescritivoChange}
                                 placeholder="Descrição do Projeto"
                                 className="bg-azul-escuro placeholder-white text-white mt-2"
-                                value={descricao}/>
+                                value={descritivo}/>
                     </div>
                 <div>
                 <div className="flex gap-2 items-center">

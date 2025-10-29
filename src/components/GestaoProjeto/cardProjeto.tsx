@@ -29,7 +29,7 @@ export const CardProjeto = ({ projeto, onRemove, onEdit }: CardProjetoProps) => 
             </CardHeader>
             <CardContent>
                 <CardDescription className="text-white h-16 ">
-                    <p className="line-clamp-3"> {projeto.descricao}</p>
+                    <p className="line-clamp-3"> {projeto.descritivo}</p>
                 </CardDescription>
             </CardContent>
             <CardFooter className="p-0 w-full flex items-end">
