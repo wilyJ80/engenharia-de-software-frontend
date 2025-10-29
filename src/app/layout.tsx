@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Menu from "@/components/MenuLateral/Menu";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,19 +31,7 @@ export default function RootLayout({
           h-screen flex
         `}
       >
-        <div
-          className="w-[400px] flex flex-col items-center"
-          style={{
-            boxShadow: "2px 0 3px rgba(0, 0, 0, .4)"
-          }}
-        >
-          <img src="/logo.png" className="w-[65%]" alt="Logo" />
-          <Menu />
-        </div>
-
-        <div className="p-4 w-full">
           {children}
-        </div>
       </body>
     </html>
   );
