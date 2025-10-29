@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 
 export interface UserType {
-    name: string;
+    nome: string;
     email: string;
 }
 
@@ -14,13 +14,13 @@ export interface EditUserModalProps {
 }
 
 export default function CreateUserModal({ cancelCreate, confirmCreate }: EditUserModalProps) {
-    const [name, setName] = useState<string>('');
+    const [nome, setNome] = useState<string>('');
     const [email, setEmail] = useState<string>('');
 
     const handleSave = () => {
-        if (name.trim() && email.trim()) {
-            confirmCreate({ name, email });
-            setName('');
+        if (nome.trim() && email.trim()) {
+            confirmCreate({ nome, email });
+            setNome('');
             setEmail('');
         } else {
             alert("Preencha todos os campos!");
@@ -35,7 +35,7 @@ export default function CreateUserModal({ cancelCreate, confirmCreate }: EditUse
                 <div className="flex flex-col text-white gap-3">
                     <div className="flex items-center gap-2">
                         <LuUserRound size={20} />
-                        <Input value={name} onChange={(e) => setName(e.target.value)} />
+                        <Input value={nome} onChange={(e) => setNome(e.target.value)} />
                     </div>
                     <div className="flex items-center gap-2">
                         <LuAtSign size={20} />

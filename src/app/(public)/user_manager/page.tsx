@@ -1,40 +1,56 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { UserCard } from "@/components/UserCard";
 import ShowConfirm from "@/components/ShowConfirm";
 import EditUserModal from "@/components/EditUserModal";
 import CreateUserModal from "@/components/CreateUserModal";
+import { createUsuario, deleteUsuario, getUsuarios, updateUsuario } from "@/core/service/UsuarioService";
+import { Usuario } from "@/core/interface/Usuario";
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
 
 export default function UserManager() {
-    const [users, setUsers] = useState<User[]>([
-        { id: 1, name: "Carlos Silva", email: "carlos.silva@example.com" },
-        { id: 2, name: "Mariana Costa", email: "mariana.costa@example.com" },
-        { id: 3, name: "João Pereira", email: "joao.pereira@example.com" },
-        { id: 4, name: "Ana Souza", email: "ana.souza@example.com" },
-    ]);
+   
+    const [users, setUsers] = useState<Usuario[]>([]);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const data = await getUsuarios();
+                setUsers(data);
+            } catch (error) {
+                console.log("Failed to fetch users:", error);
+            }
+        };
+        fetchUsers();
+    }, []);
+
 
     const [showConfirm, setShowConfirm] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<number | null>(null);
+    const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
     const [showEditCard, setShowEditCard] = useState(false);
-    const [userToEdit, setUserToEdit] = useState<User | null>(null);
+    const [userToEdit, setUserToEdit] = useState<Usuario | null>(null);
 
     const [showCreateCard, setShowCreateCard] = useState(false);
 
-    const handleDeleteClick = (id: number) => {
+    const handleDeleteClick = (id: string) => {
         setUserToDelete(id);
         setShowConfirm(true);
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
+
+        try{
+            if (userToDelete !== null) {
+                console.log("Deletando usuário com ID:", userToDelete);
+                await deleteUsuario(userToDelete);
+                console.log("Usuário deletado com sucesso");
+            }
+        }catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+        }
+
         if (userToDelete !== null) {
             setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
         }
@@ -47,17 +63,28 @@ export default function UserManager() {
         setUserToDelete(null);
     };
 
-    const handleEditClick = (id: number) => {
+    const handleEditClick =  (id: string) => {
         const user = users.find((u) => u.id === id);
         if (user) setUserToEdit(user);
         setShowEditCard(true);
     };
 
-    const confirmEdit = (data: { name: string; email: string }) => {
+    const confirmEdit = async (data: { nome: string; email: string }) => {
+        console.log("Confirmando edição......", userToEdit?.id);
+        try {
+            if (userToEdit) {
+                console.log("Editando usuário com ID:", userToEdit.id);
+                const res = await updateUsuario(userToEdit.id, { nome: data.nome, email: data.email});
+                console.log("Usuário atualizado:", res);
+            }
+        } catch (error) {
+            console.error("Erro ao editar usuário:", error);
+        }
+
         if (userToEdit) {
             setUsers((prev) =>
                 prev.map((u) =>
-                    u.id === userToEdit.id ? { ...u, name: data.name, email: data.email } : u
+                    u.id === userToEdit.id ? { ...u, nome: data.nome, email: data.email } : u
                 )
             );
         }
@@ -65,26 +92,34 @@ export default function UserManager() {
         setUserToEdit(null);
     };
 
-    const saveUser = (data: { name: string; email: string }, id?: number) => {
-        if (id) {
-            setUsers((prev) =>
-                prev.map((u) => (u.id === id ? { ...u, name: data.name, email: data.email } : u))
-            );
-        } else {
-            setUsers((prev) => [
-                ...prev,
-                {
-                    id: prev.length > 0 ? Math.max(...prev.map((u) => u.id)) + 1 : 1,
-                    name: data.name,
-                    email: data.email,
-                },
-            ]);
+    const saveUser = async (usuario: { nome: string; email: string }) => {
+        console.log("Criando......")
+        try{
+            console.log("Criando Usuario usuário ");
+            const data = await createUsuario({ nome: usuario.nome, email: usuario.email, senha: "123456" });
+          
+            console.log("Usuário criado com sucesso");
+            setUsers((prev) => [...prev, data]);
+
+        }
+        catch (error) {
+            console.error("Erro ao salvar usuário:", error);
         }
         setShowEditCard(false);
         setUserToEdit(null);
         setShowCreateCard(false);
     };
 
+    const editUser = async (usuario: {nome: string; email: string }) => {
+        console.log("Editando......", userToEdit)
+        if (userToEdit) {
+            setUsers((prev) =>
+                prev.map((u) =>
+                    u.id === userToEdit.id ? { ...u, nome: usuario.nome, email: usuario.email } : u
+                )
+            );
+        }
+    };
 
     const cancelEdit = () => {
         setShowEditCard(false);
@@ -116,7 +151,7 @@ export default function UserManager() {
                 {users.map((user) => (
                     <UserCard
                         key={user.id}
-                        name={user.name}
+                        name={user.nome}
                         email={user.email}
                         onDelete={() => handleDeleteClick(user.id)}
                         onEdit={() => handleEditClick(user.id)}
@@ -131,10 +166,10 @@ export default function UserManager() {
                 />
             )}
 
-            {showEditCard && userToEdit && (
+                    {showEditCard && userToEdit && (
                 <EditUserModal
                     cancelEdit={cancelEdit}
-                    confirmEdit={(data) => saveUser(data, userToEdit?.id)}
+                    confirmEdit={(data) => confirmEdit(data)}
                     data={userToEdit}
                 />
 
