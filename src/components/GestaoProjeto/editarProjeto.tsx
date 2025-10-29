@@ -23,7 +23,7 @@ interface EditarProjetoProps {
 export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
      const [open, setOpen] = useState(false);
      const [nome, setNome] = useState(projeto.nome);
-     const [descricao, setDescricao] = useState(projeto.descricao);
+     const [descritivo, setDescritivo] = useState(projeto.descritivo);
      console.log(projeto);
      //const [ participantes, setParticipantes ] = useState<string[]>(projeto.participantes);
 
@@ -31,7 +31,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
             setNome(e.target.value);
         }
         const onDescricaoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setDescricao(e.target.value);
+            setDescritivo(e.target.value);
         }
         
     return (
@@ -59,7 +59,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
                                 onChange={onDescricaoChange}
                                 placeholder="Descrição do Projeto"
                                 className="bg-azul-escuro placeholder-white text-white mt-2"
-                                value={descricao}/>
+                                value={descritivo}/>
                     </div>
                 <div>
                
@@ -68,7 +68,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
                 <DialogFooter>
                     <Button 
                             onClick={() => {
-                                onEdit({ ...projeto, nome, descricao });
+                                onEdit({ ...projeto, nome, descritivo });
                                 setOpen(false);
                             }}
                             className="bg-azul-escuro hover:bg-azul-claro/50 cursor pointer rounded-md border-2 px-10 border-black">

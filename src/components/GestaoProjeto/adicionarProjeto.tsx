@@ -89,7 +89,7 @@ export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {
                 <DialogFooter>
                     <Button 
                             onClick={() => {
-                                onAddProjeto({ id: Math.random().toString(36).substr(2, 9), nome, descricao });
+                                onAddProjeto({ id: Math.random().toString(36).substr(2, 9), nome, descritivo });
                                 setOpen(false);
                             }}
                             className="bg-azul-escuro hover:bg-azul-claro/50 cursor pointer rounded-md border-2 px-10 border-black">
