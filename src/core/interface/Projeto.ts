@@ -1,10 +1,9 @@
 interface Projeto {
-    status: string;
-    id:string
+    id: string
     nome: string;
-    descricao: string;
-    responsavel?: string;
-    tempo_execucao?: string;
+    descritivo: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export type { Projeto };
