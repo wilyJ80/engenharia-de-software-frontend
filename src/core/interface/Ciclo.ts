@@ -1,5 +1,5 @@
-export interface Ciclo{
-    id: number;
-    name: string;
-    versao: string;
+interface Ciclo {
+    
 }
+
+export type { Ciclo };
