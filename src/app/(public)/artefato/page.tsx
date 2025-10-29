@@ -1,7 +1,7 @@
 "use client"
 
 import ArtefatoDialog from "@/components/Artefatos/ArtefatoDialog"
-import ArtefatosTable from "../../components/Artefatos/ArtefatosTable"
+import ArtefatosTable from "../../../components/Artefatos/ArtefatosTable"
 import { useEffect, useState } from "react"
 import { visualizarArtefato, criarArtefato } from "@/service/artefatoService"
 

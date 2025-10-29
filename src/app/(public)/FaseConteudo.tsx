@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { AdicionarFase } from "./AdicionarFase"
-import FasesTable from "./FaseTable"
+import { AdicionarFase } from "../../components/Fase/AdicionarFase"
+import FasesTable from "../../components/Fase/FaseTable"
 import { Fase } from "@/core/interface/Fase"
 
 const fasesIniciais: Fase[] = [

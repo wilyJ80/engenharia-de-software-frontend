@@ -1,6 +1,6 @@
 "use client"
 
-import { FaseConteudo } from "@/components/Fase/FaseConteudo"
+import { FaseConteudo } from "@/app/(public)/FaseConteudo"
 
 
 
