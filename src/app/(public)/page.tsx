@@ -1,34 +1,25 @@
 
 "use client"; 
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import React from 'react'; 
+import { Projeto } from '@/core/interface/Projeto';
+import { getProjetos } from '@/core/service/ProjetoService';
+import React, { useEffect, useState } from 'react'; 
 
 export default function Inicio() {
+    const [projetos, setProjetos] = useState<Projeto[] | []>([]);
+    useEffect(() => {
+        const fetchProjetos = async () => {
+            try {
+                const response = await getProjetos(); 
+                setProjetos(response);
+            } catch (error) {
+                console.error("Erro ao buscar projetos:", error);
+            }
+        };
+        fetchProjetos();
+    }, []);
+        
     
-    // --- 1. DEFINIÇÃO DA ESTRUTURA DE DADOS ---
-    const projects = [
-      {
-        id: 1,
-        title: "Projeto Agenda",
-        description: "teste 1",
-      },
-      {
-        id: 2,
-        title: "Projeto Xpto",
-        description: "2",
-      },
-      {
-        id: 3,
-        title: "Novo Projeto Teste",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      },
-      {
-        id: 4,
-        title: "quarto card",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore e dolore magna aliqua.",
-      },
-    ];
-
 
     return (
         <div className="min-h-screen bg-white">
@@ -53,7 +44,7 @@ export default function Inicio() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
                   
-                    {projects.map((project) => (
+                    {projetos.map((project) => (
                         <Card 
                             key={project.id} 
                             
@@ -62,10 +53,10 @@ export default function Inicio() {
                            
                             <div> 
                                 <CardTitle className="text-xl font-semibold mb-2 text-black">
-                                    {project.title}
+                                    {project.nome}
                                 </CardTitle>
                                 <CardDescription className="text-sm text-gray-700 min-h-10 leading-snug">
-                                    {project.description}
+                                    {project.descritivo}
                                 </CardDescription>
                             </div>
                             
@@ -73,7 +64,7 @@ export default function Inicio() {
                             <div className="mt-4 pt-2">
                                 <button
                                     className="bg-sky-500 hover:bg-sky-700 text-white px-3 py-1 rounded-md text-sm font-semibold transition duration-150"
-                                    onClick={() => console.log(`Entrar no projeto: ${project.title}`)}
+                                    onClick={() => console.log(`Entrar no projeto: ${project.nome}`)}
                                 >
                                     Entrar
                                 </button>
