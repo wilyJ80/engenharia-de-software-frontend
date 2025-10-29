@@ -7,11 +7,8 @@ async function visualizarArtefato() {
     if (!response.ok) {
         throw new Error('Erro ao carregar artefatos');
     }
-
-    // backend retorna [{ nome, id }, ...]
     const data = await response.json();
 
-    // mapear para formato frontend { id, name }
     return Array.isArray(data)
         ? data.map((a: any) => ({ id: a.id, name: a.nome }))
         : [];
@@ -39,4 +36,47 @@ async function criarArtefato(nome: string) {
   return { id: created.id, name: created.nome };
 }
 
-export { visualizarArtefato, criarArtefato };
+async function atualizarArtefato(id: string | number, nome: string) {
+  const response = await fetch(`http://localhost:8000/artefatos/${encodeURIComponent(String(id))}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome }),
+  });
+
+  if (response.status === 422) {
+    const err = await response.json();
+    throw new Error(err?.detail?.[0]?.msg ?? 'Validação inválida');
+  }
+
+  if (!response.ok) {
+    throw new Error('Erro ao atualizar artefato');
+  }
+
+  const updated = await response.json();
+  // espera { nome, id }
+  return { id: updated.id, name: updated.nome };
+}
+
+async function deletarArtefato(id: string | number) {
+  const response = await fetch(`http://localhost:8000/artefatos/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (response.status === 422) {
+    const err = await response.json();
+    throw new Error(err?.detail?.[0]?.msg ?? 'Validação inválida');
+  }
+
+  if (response.status === 204) {
+    return true;
+  }
+
+  if (!response.ok) {
+    throw new Error('Erro ao deletar artefato');
+  }
+
+  return true;
+}
+
+export { visualizarArtefato, criarArtefato, atualizarArtefato, deletarArtefato };

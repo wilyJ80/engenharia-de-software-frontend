@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from 'sonner'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import UserProvider from "@/core/providers/UserProvider";
@@ -34,7 +35,8 @@ export default function RootLayout({
           >
         <UserProvider>
           {children}
-          </UserProvider>
+            <Toaster position="top-right" />
+        </UserProvider>
       </body>
       
     </html>

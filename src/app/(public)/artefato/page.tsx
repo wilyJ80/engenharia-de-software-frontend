@@ -3,7 +3,8 @@
 import ArtefatoDialog from "@/components/Artefatos/ArtefatoDialog"
 import ArtefatosTable from "../../../components/Artefatos/ArtefatosTable"
 import { useEffect, useState } from "react"
-import { visualizarArtefato, criarArtefato } from "@/core/service/artefatoService"
+import { visualizarArtefato, criarArtefato, atualizarArtefato, deletarArtefato } from "@/service/artefatoService"
+import { toast } from 'sonner'
 
 type Artefato = {
   id?: string | number
@@ -11,11 +12,6 @@ type Artefato = {
 }
 
 export default function artefato() {
-  // const [artefatos, setArtefatos] = useState<Artefato[]>([
-  //   { id: 1, name: 'Especificação de Requisitos' },
-  //   { id: 2, name: 'Diagrama de Caso de Uso' },
-  //   { id: 3, name: 'Plano de Testes' },
-  // ])
 
   const [artefatos, setArtefatos] = useState<Artefato[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,8 +46,10 @@ export default function artefato() {
         setError(null)
         const created = await criarArtefato(novoArtefato.name)
         setArtefatos(prev => [...prev, created])
+        toast.success('Artefato criado com sucesso')
       } catch (err: any) {
         setError(err.message ?? 'Erro ao criar artefato')
+        toast.error(err.message ?? 'Erro ao criar artefato')
       } finally {
         setLoading(false)
       }
@@ -63,20 +61,47 @@ export default function artefato() {
     setDialogOpen(true)
   }
 
-  const handleSave = (item: Artefato) => {
-    // se existir id atualiza, senão adiciona
+  const handleSave = async (item: Artefato) => {
+    // se existir id atualiza, senão adiciona localmente
     if (item.id != null) {
-      setArtefatos(prev => prev.map(a => (a.id === item.id ? item : a)))
+      try {
+        setLoading(true)
+        setError(null)
+        const updated = await atualizarArtefato(item.id, item.name)
+        setArtefatos(prev => prev.map(a => (a.id === updated.id ? updated : a)))
+          toast.success('Artefato atualizado com sucesso')
+      } catch (err: any) {
+        setError(err.message ?? 'Erro ao atualizar artefato')
+          toast.error(err.message ?? 'Erro ao atualizar artefato')
+      } finally {
+        setLoading(false)
+      }
     } else {
       setArtefatos(prev => [...prev, item])
     }
+
     setSelected(null)
     setDialogOpen(false)
   }
 
   const handleRemove = (id?: string | number) => {
     if (id == null) return
-    setArtefatos(prev => prev.filter(a => a.id !== id))
+
+    // Deletar do backend e remover localmente
+    ;(async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        await deletarArtefato(id)
+        setArtefatos(prev => prev.filter(a => a.id !== id))
+        toast.success('Artefato removido com sucesso')
+      } catch (err: any) {
+        setError(err.message ?? 'Erro ao deletar artefato')
+        toast.error(err.message ?? 'Erro ao deletar artefato')
+      } finally {
+        setLoading(false)
+      }
+    })()
   }
 
   return (

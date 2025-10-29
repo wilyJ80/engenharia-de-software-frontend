@@ -15,9 +15,10 @@ import { Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 
 type CicloItem = {
-  id?: number;
+  id?: string;
   name: string;
   versao: string;
+  projeto_id?: string;
 };
 
 export default function CicloDialog({
@@ -59,9 +60,10 @@ export default function CicloDialog({
     if (!ciclo || !versao) return alert("Preencha todos os campos!");
 
     const item: CicloItem = {
-      id: initialItem?.id ?? Date.now(),
+      id: initialItem?.id,
       name: ciclo,
       versao,
+      // projeto_id será definido no backend
     };
 
     if (initialItem) {
