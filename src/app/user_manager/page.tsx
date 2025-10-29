@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { UserCard } from "@/components/UserCard";
 import ShowConfirm from "@/components/ShowConfirm";
 import EditUserModal from "@/components/EditUserModal";
+import CreateUserModal from "@/components/CreateUserModal";
 
 interface User {
     id: number;
@@ -22,8 +23,11 @@ export default function UserManager() {
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [userToDelete, setUserToDelete] = useState<number | null>(null);
+
     const [showEditCard, setShowEditCard] = useState(false);
     const [userToEdit, setUserToEdit] = useState<User | null>(null);
+
+    const [showCreateCard, setShowCreateCard] = useState(false);
 
     const handleDeleteClick = (id: number) => {
         setUserToDelete(id);
@@ -61,10 +65,39 @@ export default function UserManager() {
         setUserToEdit(null);
     };
 
+    const saveUser = (data: { name: string; email: string }, id?: number) => {
+        if (id) {
+            setUsers((prev) =>
+                prev.map((u) => (u.id === id ? { ...u, name: data.name, email: data.email } : u))
+            );
+        } else {
+            setUsers((prev) => [
+                ...prev,
+                {
+                    id: prev.length > 0 ? Math.max(...prev.map((u) => u.id)) + 1 : 1,
+                    name: data.name,
+                    email: data.email,
+                },
+            ]);
+        }
+        setShowEditCard(false);
+        setUserToEdit(null);
+        setShowCreateCard(false);
+    };
+
+
     const cancelEdit = () => {
         setShowEditCard(false);
         setUserToEdit(null);
     };
+
+    const handleCreateClick = () => {
+        setShowCreateCard(true);
+    }
+
+    const cancelCreate = () => {
+        setShowCreateCard(false);
+    }
 
     return (
         <div className="p-4">
@@ -73,7 +106,7 @@ export default function UserManager() {
             </div>
 
             <div className="flex justify-end mb-4">
-                <Button className="flex items-center bg-[#186B8C] w-40 border hover:bg-blue-500">
+                <Button onClick={handleCreateClick} className="flex items-center bg-[#186B8C] w-40 border hover:bg-blue-500">
                     <MdAdd />
                     Adicionar
                 </Button>
@@ -101,8 +134,16 @@ export default function UserManager() {
             {showEditCard && userToEdit && (
                 <EditUserModal
                     cancelEdit={cancelEdit}
-                    confirmEdit={confirmEdit}
+                    confirmEdit={(data) => saveUser(data, userToEdit?.id)}
                     data={userToEdit}
+                />
+
+            )}
+
+            {showCreateCard && (
+                <CreateUserModal
+                    cancelCreate={cancelCreate}
+                    confirmCreate={(data) => saveUser(data)}
                 />
             )}
         </div>
