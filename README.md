@@ -1,4 +1,4 @@
-# Padrão de commits
+# Padrão de criação de branchs
 
 feat / o que a pesssoa está desenvolvendo _ nome da pesssoa
 
