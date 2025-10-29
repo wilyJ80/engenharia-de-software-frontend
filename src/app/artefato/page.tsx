@@ -1,6 +1,6 @@
 import ArtefatosTable from "../../components/Artefatos/ArtefatosTable"
 
-export default function Artefatos() {
+export default function artefato() {
   const mockItems = [
     { id: '1', nome: 'Especificação de Requisitos' },
     { id: '2', nome: 'Diagrama de Caso de Uso' },
