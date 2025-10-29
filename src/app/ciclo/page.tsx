@@ -20,7 +20,7 @@ const initialCiclos = [
   { id: 5, name: "Ciclo V - Sprint IV", versao: "v1.2" },
 ];
 
-export default function Ciclos() {
+export default function ciclo() {
   const [ciclos, setCiclos] = useState(initialCiclos);
   const [editOpen, setEditOpen] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<null | { id: number; name: string; versao: string }>(null);
