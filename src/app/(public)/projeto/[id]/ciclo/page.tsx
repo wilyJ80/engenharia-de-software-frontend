@@ -28,8 +28,7 @@ export default function ciclo() {
   const [error, setError] = useState<string | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<Ciclo | null>(null);
-  const { id } = useParams();
-
+  const id = useParams().id;
   // Carregar ciclos ao montar
   useEffect(() => {
     async function carregarCiclos() {
@@ -54,7 +53,7 @@ export default function ciclo() {
       const created = await criarCiclo({
         nome: item.name,
         versao: item.versao,
-        projeto_id: item.projeto_id,
+        projeto_id: String(id),
       });
       setCiclos((prev) => [...prev, created]);
       toast.success('Ciclo criado com sucesso')
@@ -81,7 +80,7 @@ export default function ciclo() {
       const updated = await atualizarCiclo(item.id, {
         nome: item.name,
         versao: item.versao,
-        projeto_id: item.projeto_id,
+        projeto_id: String(id),
       });
       setCiclos((prev) =>
         prev.map((c) => (c.id === updated.id ? updated : c))

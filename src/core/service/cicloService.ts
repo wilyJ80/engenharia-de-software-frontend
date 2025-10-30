@@ -1,7 +1,7 @@
 const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
 
-async function visualizarCiclo() {
-    const response = await fetch(`${urlBase}/ciclos/`, {
+async function visualizarCiclo(projetoId: string) {
+    const response = await fetch(`${urlBase}/ciclos/projeto/${projetoId}/`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });

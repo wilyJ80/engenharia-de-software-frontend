@@ -37,12 +37,12 @@ export const CardProjeto = ({ projeto, onRemove, onEdit }: CardProjetoProps) => 
             <CardFooter className="p-0 w-full flex items-end">
                 <CardAction className="flex w-full p-0 gap-2 justify-end px-2">
                     <Button title="Kanban" asChild className="bg-azul-claro hover:bg-transparent hover:cursor-pointer">
-                        <Link  href={"/kanban"} className="">
+                        <Link  href={"/projeto/kanban"} className="">
                          <Kanban />
                         </Link>
                     </Button>
                     <Button title="Ciclos" asChild className="bg-azul-claro hover:bg-transparent hover:cursor-pointer">
-                        <Link href={"/ciclo"} className="">
+                        <Link href={`/projeto/${projeto.id}/ciclo`} className="">
                             <RefreshCcw />
                         </Link>
                     </Button>
