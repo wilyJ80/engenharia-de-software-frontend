@@ -4,6 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: gpsSuperA-front
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_ENDERECO_API=${NEXT_PUBLIC_ENDERECO_API}
     ports:
       - "3000:3000"
+
     restart: unless-stopped
