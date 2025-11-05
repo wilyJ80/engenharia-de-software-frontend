@@ -87,7 +87,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Nome da fase"
-                className="bg-azul-escuro border text-white placeholder-gray-300"
+                
               />
             </div>
 
@@ -97,7 +97,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                 value={descritivo}
                 onChange={(e) => setDescritivo(e.target.value)}
                 placeholder="Descrição da fase"
-                className="bg-azul-escuro border text-white placeholder-gray-300"
+                
               />
             </div>
             <div>
@@ -107,14 +107,14 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                 value={ordem}
                 onChange={(e) => setOrdem(Number(e.target.value))}
                 placeholder="Ordem da fase"
-                className="bg-azul-escuro border text-white placeholder-gray-300"
+               
               />
             </div>
             <div>
               <Label>Artefatos:</Label>
               <div className="flex gap-2 mt-1">
                 <select
-                  className="border rounded-md py-1 px-2 w-full text-black"
+                  className="border bg-white rounded-md py-1 px-2 w-full text-black"
                   value={artefatoParaAdicionar?.nome}
                   onChange={(e) => setArtefatoParaAdicionar(artefatos.find(a => a.nome === e.target.value) || null)}
                 >
