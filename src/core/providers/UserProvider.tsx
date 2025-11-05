@@ -38,6 +38,7 @@ export default function UserProvider({
       setIsLoading(true);
       try {
         const userData = await me();
+        console.log("User data:", userData);
         setUser(userData);
       } catch (e) {
         console.warn("Nenhum perfil ativo", e);

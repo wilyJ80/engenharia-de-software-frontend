@@ -10,16 +10,8 @@ async function visualizarCiclo(projetoId: string) {
         throw new Error('Erro ao carregar ciclos');
     }
     const data = await response.json();
-
-    // backend retorna [{ id, nome, versao, projeto_id }, ...]
-    return Array.isArray(data)
-        ? data.map((c: any) => ({
-            id: c.id,
-            name: c.nome,
-            versao: c.versao,
-            projeto_id: c.projeto_id,
-        }))
-        : [];
+    
+    return data;
 }
 
 async function criarCiclo(dados: { nome: string; versao: string; projeto_id?: string }) {

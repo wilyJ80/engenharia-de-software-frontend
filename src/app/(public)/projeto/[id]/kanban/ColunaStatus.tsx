@@ -17,19 +17,16 @@ interface Props {
     status: StatusProjeto;
     categoria: Categoria[];
     cartoes: Cartao[];
-    // ATUALIZADO: Funções agora são assíncronas
-    onEdit: (updated: Cartao) => Promise<void>;
-    onDelete: (id: string) => Promise<void>;
 }
 
-export default function ColunaStatus({ status, categoria, cartoes, onEdit, onDelete }: Props) {
+export default function ColunaStatus({ status, categoria, cartoes }: Props) {
     const { setNodeRef } = useDroppable({
         id: status,
         data: { containerId: status },
     });
 
     return (
-        <div ref={setNodeRef} className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 rounded-2xl">
+        <div ref={setNodeRef} className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 bg-zinc-300 p-2 rounded-xl">
             {/* Cabeçalho */}
             <div className="flex justify-between mx-2 mt-2 items-center mb-2">
                 <div className="flex items-center gap-2">
@@ -51,11 +48,9 @@ export default function ColunaStatus({ status, categoria, cartoes, onEdit, onDel
                 <div className="space-y-3 overflow-y-auto px-1 scrollbar-style pb-1">
                     {cartoes.map((c) => (
                         <CartaoProjeto
-                            key={c.id}
+                            key={String(c.id)}
                             cartao={c}
                             containerId={status}
-                            onEdit={onEdit} // Repassa a prop atualizada
-                            onDelete={onDelete} // Repassa a prop atualizada
                         />
                     ))}
                 </div>

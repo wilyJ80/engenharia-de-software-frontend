@@ -11,7 +11,7 @@ type CardUpdateDTO = any;
 
 /**
  * 1. Cria um novo Card (POST /card/)
- */
+*/
 async function createCard(cardData: CardCreateDTO) {
     try {
         const resposta = await fetch(`${urlBase}/card/`, {
@@ -21,11 +21,11 @@ async function createCard(cardData: CardCreateDTO) {
             },
             body: JSON.stringify(cardData)
         });
-
+        
         if (!resposta.ok) {
             throw new Error("Erro ao criar card");
         }
-
+        
         const dados = await resposta.json();
         return dados;
         
@@ -38,7 +38,7 @@ async function createCard(cardData: CardCreateDTO) {
 /**
  * 2. Lista todos os Cards (GET /card/)
  * Permite filtrar por status ou ciclo_id.
- */
+*/
 async function listCards(status_filtro?: StatusProjeto, ciclo_id?: string) { // <-- ATUALIZADO AQUI
     try {
         // Constrói os parâmetros de busca (query params)
@@ -49,17 +49,17 @@ async function listCards(status_filtro?: StatusProjeto, ciclo_id?: string) { // 
         if (ciclo_id) {
             params.append("ciclo_id", ciclo_id);
         }
-
+        
         const queryString = params.toString();
         const url = `${urlBase}/card/${queryString ? `?${queryString}` : ""}`;
-
+        
         const resposta = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         });
-
+        
         if (!resposta.ok) {
             throw new Error("Erro ao listar cards");
         }
@@ -75,7 +75,7 @@ async function listCards(status_filtro?: StatusProjeto, ciclo_id?: string) { // 
 
 /**
  * 3. Busca um Card específico (GET /card/{card_id})
- */
+*/
 async function getCardById(card_id: string) {
     try {
         const resposta = await fetch(`${urlBase}/card/${card_id}`, {
@@ -84,11 +84,11 @@ async function getCardById(card_id: string) {
                 "Content-Type": "application/json"
             }
         });
-
+        
         if (!resposta.ok) {
             throw new Error(`Erro ao buscar card com ID ${card_id}`);
         }
-
+        
         const dados = await resposta.json();
         return dados;
         
@@ -100,7 +100,7 @@ async function getCardById(card_id: string) {
 
 /**
  * 4. Atualiza um Card (PATCH /card/{card_id})
- */
+*/
 async function updateCard(card_id: string, cardData: CardUpdateDTO) {
     try {
         const resposta = await fetch(`${urlBase}/card/${card_id}`, {
@@ -110,11 +110,11 @@ async function updateCard(card_id: string, cardData: CardUpdateDTO) {
             },
             body: JSON.stringify(cardData)
         });
-
+        
         if (!resposta.ok) {
             throw new Error(`Erro ao atualizar card com ID ${card_id}`);
         }
-
+        
         const dados = await resposta.json();
         return dados;
         
@@ -126,7 +126,7 @@ async function updateCard(card_id: string, cardData: CardUpdateDTO) {
 
 /**
  * 5. Deleta um Card (DELETE /card/{card_id})
- */
+*/
 async function deleteCard(card_id: string) {
     try {
         const resposta = await fetch(`${urlBase}/card/${card_id}`, {
@@ -147,18 +147,9 @@ async function deleteCard(card_id: string) {
     }
 }
 
-
-export {
-    createCard,
-    listCards,
-    getCardById,
-    updateCard,
-    deleteCard
-}
-
-async function getCartoesPorIdProjeto(projetoId: string) {
+async function getCartoesPorIdCiclo(cicloId: string) {
     try {
-        const resposta = await fetch(`${urlBase}/ciclos/projeto/${projetoId}`, {
+        const resposta = await fetch(`${urlBase}/card?ciclo_id=${cicloId}`, {
             method: "GET",
             headers: {
                 "Contente-type": "application/json"
@@ -178,9 +169,35 @@ async function getCartoesPorIdProjeto(projetoId: string) {
     }
 }
 
-
-
+async function mudarStatusCard(card_id: string | null, status: string) {
+    try {
+        const resposta = await fetch(`${urlBase}/card/alterarStatus/${card_id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: card_id,
+                tempo_planejado_horas: 0,
+                status: status
+            })
+        });
+        
+        return resposta.status;
+        
+    } catch(e) {
+        console.error(e);
+        return;
+    }
+}
 
 export {
-    getCartoesPorIdProjeto
+    getCartoesPorIdCiclo,
+    mudarStatusCard,
+    createCard,
+    listCards,
+    getCardById,
+    updateCard,
+    deleteCard
 }
+
