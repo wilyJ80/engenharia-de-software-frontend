@@ -76,7 +76,7 @@ export default function ArtefatoDialog({
       {/* Botão que abre o diálogo (apenas para modo adicionar, quando não controlado) */}
       {!controlled && (
         <DialogTrigger asChild>
-          <Button className="flex items-center gap-2 bg-azul-escuro text-white hover:bg-azul-claro transition">
+          <Button className="flex items-center gap-2 transition">
             <Plus size={18} />
             <span>Artefato</span>
           </Button>
@@ -112,7 +112,7 @@ export default function ArtefatoDialog({
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSave} className="bg-azul-claro hover:bg-blue-400 text-white">
+          <Button onClick={handleSave}>
             Salvar
           </Button>
         </DialogFooter>

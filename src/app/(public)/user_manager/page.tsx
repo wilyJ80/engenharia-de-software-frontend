@@ -139,7 +139,10 @@ export default function UserManager() {
             </div>
 
             <div className="flex justify-end mb-4">
-                <Button onClick={handleCreateClick} className="flex items-center bg-[#186B8C] w-40 border hover:bg-blue-500">
+                <Button
+                    onClick={handleCreateClick}
+                    className="flex items-center w-40 border"
+                >
                     <MdAdd />
                     Adicionar
                 </Button>

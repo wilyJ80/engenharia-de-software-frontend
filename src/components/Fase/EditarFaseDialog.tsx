@@ -60,7 +60,6 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
       <Button
         title="Editar"
         onClick={() => setOpen(true)}
-        className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"
       >
         <Pencil />
       </Button>
@@ -117,7 +116,6 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
                   ))}
                 </select>
                 <Button
-                  className="bg-azul-claro hover:bg-azul-claro/70"
                   onClick={handleAddArtefato}
                 >
                   Adicionar
@@ -132,12 +130,12 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
                       className="flex items-center gap-1 bg-azul-claro text-white rounded-full px-3 py-1"
                     >
                       <span>{a.nome}</span>
-                      <button
+                      <Button
                         onClick={() => handleRemoveArtefato(a)}
-                        className="hover:text-red-300"
+                        variant={"destructive"}
                       >
                         <X size={16} />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -148,7 +146,7 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
             <DialogFooter>
               <Button
                 onClick={handleSalvar}
-                className="bg-azul-escuro hover:bg-azul-claro/50 cursor-pointer rounded-md border-2 px-10 border-black"
+                className=" cursor-pointer rounded-md border-2 px-10 "
               >
                 Salvar
               </Button>

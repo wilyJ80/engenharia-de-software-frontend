@@ -70,7 +70,6 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
   return (
     <>
       <Button
-        className="bg-azul-escuro hover:bg-azul-claro text-white rounded-md"
         onClick={() => setOpen(true)}
       >
         + Fase
@@ -126,7 +125,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                   ))}
                 </select>
                 <Button
-                  className="bg-azul-claro hover:bg-azul-claro/70"
+                  
                   onClick={handleAddArtefato}
                 >
                   Adicionar
@@ -141,12 +140,12 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                       className="flex items-center gap-1 bg-azul-claro text-white rounded-full px-3 py-1"
                     >
                       <span>{a.nome}</span>
-                      <button
+                      <Button
                         onClick={() => handleRemoveArtefato(a)}
-                        className="hover:text-red-300"
+                        variant={"destructive"}
                       >
                         <X size={16} />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>

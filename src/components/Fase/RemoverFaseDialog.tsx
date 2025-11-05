@@ -23,7 +23,7 @@ export const RemoverFase = ({ onRemove, fase }: RemoverFaseProps) => {
     <>
       <Button
         title="Remover"
-        className="bg-azul-claro hover:bg-red-500 hover:cursor-pointer"
+        variant={"destructive"}
         onClick={() => setOpen(true)}
       >
         <Trash2 />
