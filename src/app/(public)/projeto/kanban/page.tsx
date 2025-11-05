@@ -18,15 +18,19 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import { useState } from "react";
 import ColunaStatus from "./ColunaStatus";
 import CartaoProjeto from "./CartaoProjeto";
+import { Ciclo } from "@/core/interface/Ciclo";
+import { Cartao } from "@/core/interface/Cartao";
 
 export default function Kanban() {
 
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
     const [activeId, setActiveId] = useState<string | null>(null);
 
+    const [card, setCard] = useState<Cartao[] | undefined>([])
+
     const statuses: StatusProjeto[] = ["a_fazer", "em_andamento", "testes_validacao", "concluido"];
 
-    const [columns, setColumns] = useState<Record<StatusProjeto, Projeto[]>>({
+    const [columns, setColumns] = useState<Record<StatusProjeto, Cartao[]>>({
         a_fazer: [],
         em_andamento: [],
         testes_validacao: [],
@@ -34,7 +38,7 @@ export default function Kanban() {
     });
 
     const [pendingMove, setPendingMove] = useState<{
-    item: Projeto
+    item: Cartao
         from: StatusProjeto
         to: StatusProjeto
         overId: string | null
@@ -221,7 +225,7 @@ export default function Kanban() {
                                 <ColunaStatus
                                     categoria={[{ nome: formatStatus(status), color: getStatusColor(status) }]}
                                     status={status}
-                                    editais={columns[status]}
+                                    cartoes={columns[status]}
                                 />
 
                             </SortableContext>

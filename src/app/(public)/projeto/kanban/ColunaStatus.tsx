@@ -6,6 +6,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { StatusProjeto } from "@/core/constants/StatusProjeto";
 import { Projeto } from "@/core/interface/Projeto";
 import CartaoProjeto from "./CartaoProjeto";
+import { Cartao } from "@/core/interface/Cartao";
 
 export interface Categoria {
   nome: string;
@@ -15,7 +16,7 @@ export interface Categoria {
 interface Props {
   status: StatusProjeto;
   categoria: Categoria[];
-  editais: Projeto[];
+  cartoes: Cartao[];
 }
 
 // const getStatusColor = (status: StatusProjeto): string => {
@@ -28,7 +29,7 @@ interface Props {
 // };
 
 
-export default function ColunaStatus({ status, categoria, editais }: Props) {
+export default function ColunaStatus({ status, categoria, cartoes }: Props) {
   // Droppable container com data.containerId = status
   const { setNodeRef } = useDroppable({
     id: status,
@@ -53,14 +54,14 @@ export default function ColunaStatus({ status, categoria, editais }: Props) {
         </div>
 
         <div className={`flex items-center justify-center w-6 h-6 bg-black rounded-full`}>
-          <span className="font-semibold text-white text-md">{editais.length}</span>
+          <span className="font-semibold text-white text-md">{cartoes.length}</span>
         </div>
       </div>
 
       <div className="space-y-3 overflow-y-auto px-[4px] scrollbar-style pb-1">
-          {editais.map((edital) => (
+          {cartoes.map((c) => (
             // PASSA containerId para o cartão (necessário para usar data.containerId no useSortable)
-            <CartaoProjeto projeto={edital} containerId={status} />
+            <CartaoProjeto cartao={c} containerId={status} />
           ))}
       </div>
     </div>
