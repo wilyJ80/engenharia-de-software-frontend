@@ -12,7 +12,7 @@ async function visualizarArtefato() {
     const data = await response.json();
 
     return Array.isArray(data)
-        ? data.map((a: any) => ({ id: a.id, name: a.nome }))
+        ? data.map((a: any) => ({ id: a.id, nome: a.nome }))
         : [];
 }
 
