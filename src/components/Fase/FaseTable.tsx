@@ -46,7 +46,7 @@ export default function FasesTable({ fase, onDeleteFase, onEditFase }: FaseProps
               <tr key={item.id} className={rowBg}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{item.nome}</td>
                 <td className="px-6 py-4 text-sm">{item.descritivo}</td>
-                <td className="px-6 text-sm">{item.artefatos.join(", ")}</td>
+                <td className="px-6 text-sm">{item.artefatos.map(a => a.nome).join(", ")}</td>
                 <td className="px-2 py-4 text-center text-sm">{item.ordem}</td>
                 <td className="px-6 py-4 text-sm">
                   <div className="flex gap-2">
