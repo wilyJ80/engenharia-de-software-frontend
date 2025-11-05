@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
      <>
       <div
-        className="w-[400px] flex flex-col items-center"
+        className="w-[400px] h-full flex flex-col items-center"
         style={{
           boxShadow: "2px 0 3px rgba(0, 0, 0, .4)"
         }}
@@ -24,7 +24,7 @@ export default function RootLayout({
 
       <div className="w-full flex-col flex">
         <Header />
-        <div className="p-4 w-full">
+        <div className="p-4 w-full overflow-y-scroll">
           {children}
         </div>
       </div>
