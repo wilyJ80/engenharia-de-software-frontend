@@ -12,14 +12,14 @@ import { Button } from "../ui/button"
 import { Kanban, Pencil, RefreshCcw, X, Trash2 } from "lucide-react";
 import { RemoverProjeto } from "./removerProjeto";
 import { EditarProjeto } from "./editarProjeto";
-import { Projeto } from "@/core/interface/Projeto";
+import { Projeto, ProjetoComParticipantes } from "@/core/interface/Projeto";
 import Link from "next/link";
 
 
 interface CardProjetoProps {
-    projeto: Projeto;
+    projeto: ProjetoComParticipantes;
     onRemove: (id: string) => void;
-    onEdit: (projeto: Projeto) => void;
+    onEdit: (projeto: Partial<ProjetoComParticipantes>) => void;
 }
 
 export const CardProjeto = ({ projeto, onRemove, onEdit }: CardProjetoProps) => {

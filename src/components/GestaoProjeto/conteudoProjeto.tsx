@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react"
 import { AdicionarProjeto } from "./adicionarProjeto"
 import { CardProjeto } from "./cardProjeto"
-import { Projeto } from "@/core/interface/Projeto"
-import { StatusProjeto } from "@/core/constants/StatusProjeto"
-import { createProjecto, deleteProjeto, getProjetos, updateProjeto } from "@/core/service/ProjetoService"
+import { Projeto, ProjetoComParticipantes } from "@/core/interface/Projeto"
+import { createProjeto, deleteProjeto, getProjetos, updateProjeto } from "@/core/service/ProjetoService"
 import { toast } from "sonner"
 
 export const ConteudoProjeto = () => {
-    const [projetos, setProjetos] = useState<Projeto[] | []>([]);
+    const [projetos, setProjetos] = useState<ProjetoComParticipantes[] | []>([]);
        useEffect(() => {
            const fetchProjetos = async () => {
                try {
@@ -22,10 +21,11 @@ export const ConteudoProjeto = () => {
            fetchProjetos();
        }, []);
 
-    const handleAddProjeto = async (novoProjeto: Omit<Projeto, "status">) => {
+    const handleAddProjeto = async (novoProjeto: { nome: string; descritivo: string; participantes: { id: string; nome: string }[] }) => {
+        const responsaveis_id = novoProjeto.participantes.map(participante => participante.id);
         try {
-            const res = await createProjecto(novoProjeto);
-            setProjetos([...projetos, { ...res, status: "em_andamento" }]);
+            const res = await createProjeto({ ...novoProjeto, responsaveis_id });
+            setProjetos([...projetos, { ...res, responsaveis: novoProjeto.participantes}]);
             toast.success("Projeto adicionado com sucesso");
         } catch (error) {
             toast.error("Erro ao adicionar projeto");
@@ -42,9 +42,11 @@ export const ConteudoProjeto = () => {
         }
     }
 
-    const handleEditProjeto = async (projetoEditado: Projeto) => {
+    const handleEditProjeto = async (projetoEditado: Partial<ProjetoComParticipantes>) => {
         try {
-            const res = await updateProjeto(projetoEditado.id, projetoEditado);
+            if(!projetoEditado.id) return;
+            const responsaveis_id = projetoEditado.responsaveis_dto?.map(participante => participante.id) || [];
+            const res = await updateProjeto(projetoEditado.id, { ...projetoEditado, responsaveis_id });
             setProjetos(projetos.map(projeto => 
                 projeto.id === projetoEditado.id ? res : projeto
             ));

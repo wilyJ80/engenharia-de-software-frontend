@@ -1,4 +1,5 @@
 import { StatusProjeto } from "../constants/StatusProjeto";
+import { Usuario } from "./Usuario";
 
 interface Projeto {
     id: string
@@ -9,4 +10,7 @@ interface Projeto {
     updated_at?: string;
 }
 
-export type { Projeto };
+interface ProjetoComParticipantes extends Projeto {
+    responsaveis_dto: Usuario[];
+}
+export type { Projeto, ProjetoComParticipantes };

@@ -33,14 +33,15 @@ export const RemoverProjeto = ({ onRemove, projeto }: RemoverProjetoProps) => {
             <Dialog  open={open} onOpenChange={setOpen}>
                <DialogContent className="bg-azul-escuro text-white border-none rounded-md">
                    <DialogTitle>Remover Projeto</DialogTitle>
-                   <DialogDescription>Tem certeza que deseja remover o projeto {projeto.nome}?</DialogDescription>
+                   <DialogDescription className="text-gray-300">Tem certeza que deseja remover o projeto {projeto.nome}?</DialogDescription>
                    <DialogFooter>
                        <Button 
+                            variant={"destructive"}
                             onClick={() => {
                                 onRemove(projeto.id);
                                 setOpen(false);
                             }}
-                            className="bg-azul-escuro hover:bg-azul-claro/50 cursor-pointer rounded-md border-2 px-10 border-black">
+                            >
                            Remover
                        </Button>
                    </DialogFooter>
