@@ -8,6 +8,7 @@ import EditUserModal from "@/components/EditUserModal";
 import CreateUserModal from "@/components/CreateUserModal";
 import { createUsuario, deleteUsuario, getUsuarios, updateUsuario } from "@/core/service/UsuarioService";
 import { Usuario } from "@/core/interface/Usuario";
+import { toast } from "sonner";
 
 
 export default function UserManager() {
@@ -49,6 +50,7 @@ export default function UserManager() {
                 setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
         }
     }catch (error) {
+        toast.error("Erro ao deletar usuário");
         console.error("Erro ao deletar usuário:", error);
     }
 
@@ -71,12 +73,12 @@ export default function UserManager() {
         console.log("Confirmando edição......", userToEdit?.id);
         try {
             if (userToEdit) {
-                console.log("Editando usuário com ID:", userToEdit.id);
                 const res = await updateUsuario(userToEdit.id, { nome: data.nome, email: data.email, senha: "123"});
-                console.log("Usuário atualizado:", res);
+                toast.success("Usuário editado com sucesso");
             }
         } catch (error) {
             console.error("Erro ao editar usuário:", error);
+            toast.error("Erro ao editar usuário");
         }
 
         if (userToEdit) {
@@ -91,16 +93,14 @@ export default function UserManager() {
     };
 
     const saveUser = async (usuario: { nome: string; email: string }) => {
-        console.log("Criando......")
         try{
-            console.log("Criando Usuario usuário ");
             const data = await createUsuario({ nome: usuario.nome, email: usuario.email, senha: "123456" });
-          
-            console.log("Usuário criado com sucesso");
+            toast.success("Usuário criado com sucesso");
             setUsers((prev) => [...prev, data]);
 
         }
         catch (error) {
+            toast.error("Erro ao salvar usuário");
             console.error("Erro ao salvar usuário:", error);
         }
         setShowEditCard(false);

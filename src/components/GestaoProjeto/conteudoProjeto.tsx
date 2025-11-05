@@ -6,6 +6,7 @@ import { CardProjeto } from "./cardProjeto"
 import { Projeto } from "@/core/interface/Projeto"
 import { StatusProjeto } from "@/core/constants/StatusProjeto"
 import { createProjecto, deleteProjeto, getProjetos, updateProjeto } from "@/core/service/ProjetoService"
+import { toast } from "sonner"
 
 export const ConteudoProjeto = () => {
     const [projetos, setProjetos] = useState<Projeto[] | []>([]);
@@ -25,8 +26,9 @@ export const ConteudoProjeto = () => {
         try {
             const res = await createProjecto(novoProjeto);
             setProjetos([...projetos, { ...res, status: "em_andamento" }]);
+            toast.success("Projeto adicionado com sucesso");
         } catch (error) {
-            console.error("Erro ao adicionar projeto:", error);
+            toast.error("Erro ao adicionar projeto");
         }
     }
 
@@ -34,8 +36,9 @@ export const ConteudoProjeto = () => {
         try{
             await deleteProjeto(idProjeto);
             setProjetos(projetos.filter(projeto => projeto.id !== idProjeto));
+            toast.success("Projeto removido com sucesso");
         } catch (error) {
-            console.error("Erro ao remover projeto:", error);
+            toast.error("Erro ao remover projeto");
         }
     }
 

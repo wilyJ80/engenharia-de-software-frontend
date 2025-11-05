@@ -5,6 +5,7 @@ import { AdicionarFase } from "./AdicionarFase"
 import FasesTable from "./FaseTable"
 import { Fase } from "@/core/interface/Fase"
 import { createFase, deleteFase, getFases, updateFase } from "@/core/service/faseService"
+import { toast } from "sonner"
 
 
 
@@ -25,8 +26,9 @@ export const FaseConteudo = () => {
       const res = await createFase({ ...fase, artefato_ids: artefatosId })
 
       setFases((prev) => [...(prev || []), res])
+      toast.success('Fase criada com sucesso')
      } catch (error) {
-       console.error('Erro ao criar fase:', error)
+       toast.error('Erro ao criar fase')
      }
   }
 
