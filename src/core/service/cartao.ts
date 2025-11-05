@@ -1,8 +1,8 @@
 const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
 
-async function getCartoesPorIdProjeto(projetoId: string) {
+async function getCartoesPorIdCiclo(cicloId: string) {
     try {
-        const resposta = await fetch(`${urlBase}/ciclos/projeto/${projetoId}`, {
+        const resposta = await fetch(`${urlBase}/card?ciclo_id=${cicloId}`, {
             method: "GET",
             headers: {
                 "Contente-type": "application/json"
@@ -23,5 +23,5 @@ async function getCartoesPorIdProjeto(projetoId: string) {
 }
 
 export {
-    getCartoesPorIdProjeto
+    getCartoesPorIdCiclo
 }

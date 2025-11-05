@@ -15,13 +15,20 @@ import {
 
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ColunaStatus from "./ColunaStatus";
 import CartaoProjeto from "./CartaoProjeto";
 import { Ciclo } from "@/core/interface/Ciclo";
 import { Cartao } from "@/core/interface/Cartao";
+import { getCartoesPorIdCiclo } from "@/core/service/cartao";
+import { visualizarCiclo } from "@/core/service/cicloService";
+import { useParams } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SelectItemText } from "@radix-ui/react-select";
 
-export default function Kanban() {
+export default function Kanban({ projetoId }: { projetoId: string }) {
+
+    const idProjeto = projetoId;
 
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
     const [activeId, setActiveId] = useState<string | null>(null);
@@ -184,6 +191,25 @@ export default function Kanban() {
         }
     };
 
+    const [ciclos, setCiclos] = useState<Ciclo[]>([]);
+    const [cartoes, setCartoes] = useState<Cartao[]>([]);
+    
+    async function buscarCiclos() {
+        const resposta = await visualizarCiclo(idProjeto);
+        setCiclos(resposta);
+        await getCartoes(resposta[0].id);
+    }
+
+    async function getCartoes(idCiclo: string) {
+        const resposta = await getCartoesPorIdCiclo(idCiclo);
+        console.log("cartoes", resposta);
+        setCartoes(resposta);
+    }
+
+    useEffect(() => {
+        buscarCiclos();
+    }, [])
+
     return (
         <div>
             <div className="flex flex-col justify-between items-center gap-10">
@@ -202,7 +228,24 @@ export default function Kanban() {
                             boxShadow: "3px 3px 5px rgba(0, 0, 0, 05)"
                         }}
                     >
-                        <p className="text-white text-3xl"><strong>Ciclo</strong>: Ciclo | Propspecção versão: 1.0.0</p>
+                        <div className="text-white text-3xl flex items-center gap-2">
+                            <strong>Ciclo</strong>: 
+                            <Select>
+                                <SelectTrigger className="bg-white text-black">
+                                    <SelectValue placeholder="Selecione um ciclo" />
+                                </SelectTrigger>
+
+                                <SelectContent className="">
+                                    {
+                                        ciclos.map((ciclo) => (
+                                            <SelectItem className="" key={ciclo.id} value={ciclo.id}>
+                                                {ciclo.nome}
+                                            </SelectItem>
+                                        ))
+                                    }
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
                 </div>
 

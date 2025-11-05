@@ -24,7 +24,8 @@ const participantesMock = [
     "Charlie",
     "David",
     "Eve"
-];  
+];
+
 interface AdicionarProjetoProps {
     onAddProjeto: (novoProjeto: Omit<Projeto, "status">) => void;
 }

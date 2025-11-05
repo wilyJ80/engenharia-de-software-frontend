@@ -50,7 +50,6 @@ export default function Inicio() {
                             
                             className="bg-white text-black shadow-xl rounded-lg p-6 flex flex-col justify-between h-full"
                         >
-                           
                             <div> 
                                 <CardTitle className="text-xl font-semibold mb-2 text-black">
                                     {project.nome}
@@ -59,7 +58,6 @@ export default function Inicio() {
                                     {project.descritivo}
                                 </CardDescription>
                             </div>
-                            
                         
                             <div className="mt-4 pt-2">
                                 <button
