@@ -105,12 +105,11 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
             // opcional: inserir no começo
             dest.unshift(moved);
 
-            console.log("overContainer", );
-
             const resposta = mudarStatus(movedItem.id, overContainer.toString());
 
             if (!resposta) {
                 toast.error('Erro ao mudar status');
+                return prev;
             }
 
             toast.success('Status alterado com sucesso');
