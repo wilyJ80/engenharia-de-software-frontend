@@ -7,6 +7,8 @@ import { StatusProjeto } from "@/core/constants/StatusProjeto";
 import { Projeto } from "@/core/interface/Projeto";
 import CartaoProjeto from "./CartaoProjeto";
 import { Cartao } from "@/core/interface/Cartao";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+
 
 export interface Categoria {
   nome: string;
@@ -17,33 +19,20 @@ interface Props {
   status: StatusProjeto;
   categoria: Categoria[];
   cartoes: Cartao[];
+  onEdit: (updated: Cartao) => void;
+  onDelete: (id: string) => void;
 }
 
-// const getStatusColor = (status: StatusProjeto): string => {
-//   switch (status) {
-//       case "PENDING": return "#99A1AF";
-//       case "UNDER_CONSTRUCTION": return "red";
-//       case "WAITING_FOR_REVIEW": return "#656149";
-//       case "COMPLETED": return "darkgreen";
-//   }
-// };
-
-
-export default function ColunaStatus({ status, categoria, cartoes }: Props) {
-  // Droppable container com data.containerId = status
+export default function ColunaStatus({ status, categoria, cartoes, onEdit, onDelete }: Props) {
   const { setNodeRef } = useDroppable({
     id: status,
     data: { containerId: status },
   });
 
   return (
-    <div
-      ref={setNodeRef}
-      className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 rounded-2xl"
-    >
-      <div
-        className="flex justify-between mx-2 mt-2 items-center mb-2"
-      >
+    <div ref={setNodeRef} className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 rounded-2xl">
+      {/* Cabeçalho */}
+      <div className="flex justify-between mx-2 mt-2 items-center mb-2">
         <div className="flex items-center gap-2">
           {categoria.map((c) => (
             <div key={c.nome} className="flex items-center gap-2">
@@ -53,17 +42,24 @@ export default function ColunaStatus({ status, categoria, cartoes }: Props) {
           ))}
         </div>
 
-        <div className={`flex items-center justify-center w-6 h-6 bg-black rounded-full`}>
+        <div className="flex items-center justify-center w-6 h-6 bg-black rounded-full">
           <span className="font-semibold text-white text-md">{cartoes.length}</span>
         </div>
       </div>
 
-      <div className="space-y-3 overflow-y-auto px-[4px] scrollbar-style pb-1">
+      <SortableContext items={cartoes.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+        <div className="space-y-3 overflow-y-auto px-[4px] scrollbar-style pb-1">
           {cartoes.map((c) => (
-            // PASSA containerId para o cartão (necessário para usar data.containerId no useSortable)
-            <CartaoProjeto cartao={c} containerId={status} />
+            <CartaoProjeto
+              key={c.id}
+              cartao={c}
+              containerId={status}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
           ))}
-      </div>
+        </div>
+      </SortableContext>
     </div>
   );
 }

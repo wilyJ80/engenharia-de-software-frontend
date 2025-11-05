@@ -31,12 +31,91 @@ export default function Kanban() {
     const statuses: StatusProjeto[] = ["a_fazer", "em_andamento", "testes_validacao", "concluido"];
 
     const [columns, setColumns] = useState<Record<StatusProjeto, Cartao[]>>({
-        a_fazer: [],
-        em_andamento: [],
+        a_fazer: [
+            {
+                id: "1",
+                projeto_id: "proj-001",
+                status: "a_fazer",
+                tempo_planejado_horas: 2,
+                link: "#",
+                ciclo_id: "ciclo-001",
+                fase_id: "fase-001",
+                artefato_id: "artefato-001",
+                responsavel_id: "user-001",
+                created_at: "2025-11-01T10:00:00Z",
+                updated_at: "2025-11-01T10:00:00Z",
+            },
+            {
+                id: "2",
+                projeto_id: "proj-002",
+                status: "a_fazer",
+                tempo_planejado_horas: 4,
+                link: "#",
+                ciclo_id: "ciclo-001",
+                fase_id: "fase-002",
+                artefato_id: "artefato-002",
+                responsavel_id: "user-002",
+                created_at: "2025-11-02T08:00:00Z",
+                updated_at: "2025-11-02T08:00:00Z",
+            },
+        ],
+        em_andamento: [
+            {
+                id: "3",
+                projeto_id: "proj-003",
+                status: "em_andamento",
+                tempo_planejado_horas: 3,
+                link: "#",
+                ciclo_id: "ciclo-001",
+                fase_id: "fase-003",
+                artefato_id: "artefato-003",
+                responsavel_id: "user-003",
+                created_at: "2025-11-03T09:00:00Z",
+                updated_at: "2025-11-04T12:00:00Z",
+            },
+        ],
         testes_validacao: [],
-        concluido: [],
+        concluido: [
+            {
+                id: "4",
+                projeto_id: "proj-004",
+                status: "concluido",
+                tempo_planejado_horas: 1,
+                link: "#",
+                ciclo_id: "ciclo-001",
+                fase_id: "fase-004",
+                artefato_id: "artefato-004",
+                responsavel_id: "user-004",
+                created_at: "2025-11-01T07:00:00Z",
+                updated_at: "2025-11-01T09:00:00Z",
+            },
+        ],
     });
+    
+    const handleEditCard = (updated: Cartao) => {
+        setColumns((prev) => {
+          const newCols = { ...prev };
+          const col = newCols[updated.status as StatusProjeto];
+          const idx = col.findIndex((c) => c.id === updated.id);
+          if (idx !== -1) {
+            col[idx] = updated;
+          }
+          return newCols;
+        });
+      };
+      
+      const handleDeleteCard = (id: string) => {
+        setColumns((prev) => {
+          const newCols = {} as typeof prev;
+          for (const [key, cards] of Object.entries(prev)) {
+            newCols[key as StatusProjeto] = cards.filter((c) => c.id !== id);
+          }
+          return newCols;
+        });
+      };
+      
 
+    
     const [pendingMove, setPendingMove] = useState<{
     item: Cartao
         from: StatusProjeto
@@ -45,80 +124,55 @@ export default function Kanban() {
     } | null>(null);
 
     const handleDragEnd = (event: DragEndEvent) => {
-        
         const { active, over } = event;
         setActiveId(null);
-
         if (!over) return;
-
+      
         const activeId = String(active.id);
         const overId = String(over.id);
-
+      
         const activeContainer = active.data.current?.containerId as StatusProjeto | undefined;
         const overContainer = over.data.current?.containerId as StatusProjeto | undefined;
-
-
-        // if ( // Somente ADM e ANALIST podem mover de RASCUNHO -> EM CONSTRUÇÃO -> EM ANALISE
-        //     (
-        //         activeContainer === "PENDING" && (overContainer === "UNDER_CONSTRUCTION" || overContainer === "WAITING_FOR_REVIEW" || overContainer === "COMPLETED") ||
-        //         activeContainer === "UNDER_CONSTRUCTION" && (overContainer === "PENDING" || overContainer === "WAITING_FOR_REVIEW" || overContainer === "COMPLETED") ||
-        //         activeContainer === "WAITING_FOR_REVIEW" && overContainer === "PENDING"
-        //     ) &&
-        //     !(usuario?.access_level === "ANALYST" || usuario?.access_level === "ADMIN")
-        // ) {
-        //     toast.info("Você não tem permissão para mover este edital para esta coluna.");
-        //     return;
-        // }
-// 
-        // if (activeContainer === "WAITING_FOR_REVIEW" && (overContainer === "UNDER_CONSTRUCTION" || overContainer === "PENDING" || overContainer === "COMPLETED") && usuario?.access_level === "ANALYST") {
-        //     toast.info("Você não tem permissão para mover este edital para esta coluna.");
-        //     return;
-        // }
-
+      
+        console.log("ativou o container:", activeContainer, "over Container:", overContainer);
+      
         if (!activeContainer || !overContainer) return;
-
-        // mesma coluna: reordenar
+      
+        // Mesma coluna: reorder
         if (activeContainer === overContainer) {
-            setColumns((prev) => {
-                const col = [...prev[activeContainer]];
-                const oldIndex = col.findIndex((i) => i.id === activeId);
-                const overIndex = col.findIndex((i) => i.id === overId);
-
-                if (overIndex === -1) {
-                    if (oldIndex === -1) return prev;
-                    const [moved] = col.splice(oldIndex, 1);
-                    col.push(moved);
-
-                    return { ...prev, [activeContainer]: col };
-                }
-
-                if (oldIndex === -1) return prev;
-                const reordered = arrayMove(col, oldIndex, overIndex);
-                return { ...prev, [activeContainer]: reordered };
-            });
-            return;
+          setColumns((prev) => {
+            const col = [...prev[activeContainer]];
+            const oldIndex = col.findIndex((i) => i.id === activeId);
+            const overIndex = col.findIndex((i) => i.id === overId);
+            if (oldIndex === -1 || overIndex === -1) return prev;
+            return {
+              ...prev,
+              [activeContainer]: arrayMove(col, oldIndex, overIndex),
+            };
+          });
+          return;
         }
-
-        // colunas diferentes: mover
-        if (activeContainer !== overContainer) {
-            const source = columns[activeContainer];
-            const oldIndex = source.findIndex(i => i.id === activeId);
-            if (oldIndex === -1) return;
-            
-            const movedItem = source[oldIndex];
-
-            // guarda a movimentação pendente e abre o diálogo
-            setPendingMove({
-                item: movedItem,
-                from: activeContainer,
-                to: overContainer,
-                overId: overId,
-            });
-
-            return; // <-- não chama setColumns aqui!
-        }
-
-    };
+      
+        // Colunas diferentes: mover
+        setColumns((prev) => {
+          const source = [...prev[activeContainer]];
+          const dest = [...prev[overContainer]];
+      
+          const oldIndex = source.findIndex((i) => i.id === activeId);
+          if (oldIndex === -1) return prev;
+      
+          const [moved] = source.splice(oldIndex, 1);
+          moved.status = overContainer;
+          dest.unshift(moved);
+      
+          return {
+            ...prev,
+            [activeContainer]: source,
+            [overContainer]: dest,
+          };
+        });
+      };
+      
 
     // confirma a movimentação
     const confirmMove = () => {
@@ -215,22 +269,18 @@ export default function Kanban() {
                     <div className="flex justify-between h-[85%] relative gap-3 w-full">
                     {statuses.map((status) => (
                         <div className="w-full flex flex-1" key={status}>
-                            <SortableContext items={columns[status].map((c) => c.id)} strategy={verticalListSortingStrategy}>
-                                {
-                                    
-                                    status !== "a_fazer" && !status[status.length] && (
-                                        <div className="h-5 w-1 bg-black"/>
-                                    )
-                                }
-                                <ColunaStatus
-                                    categoria={[{ nome: formatStatus(status), color: getStatusColor(status) }]}
-                                    status={status}
-                                    cartoes={columns[status]}
-                                />
+                            {/* Cada coluna é droppable */}
+                            <ColunaStatus
+                            categoria={[{ nome: formatStatus(status), color: getStatusColor(status) }]}
+                            status={status}
+                            cartoes={columns[status]}
+                            onEdit={handleEditCard}
+                            onDelete={handleDeleteCard}
+                            />
 
-                            </SortableContext>
                         </div>
-                    ))}
+                        ))}
+
                 </div>
                 </DndContext>
             </div>
