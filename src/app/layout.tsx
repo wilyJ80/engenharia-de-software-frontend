@@ -33,6 +33,7 @@ export default function RootLayout({
           h-screen flex
           `}
           >
+        
         <UserProvider>
           {children}
             <Toaster position="top-right" />

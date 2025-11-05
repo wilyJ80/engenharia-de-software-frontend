@@ -1,5 +1,6 @@
 
 import Menu from "@/components/MenuLateral/Menu";
+import { Header } from "@/components/ui/header";
 import UserProvider from "@/core/providers/UserProvider";
 import { User } from "lucide-react";
 
@@ -21,8 +22,11 @@ export default function RootLayout({
         <Menu />
       </div>
 
-      <div className="p-4 w-full">
-        {children}
+      <div className="w-full flex-col flex">
+        <Header />
+        <div className="p-4 w-full">
+          {children}
+        </div>
       </div>
    </>
   );
