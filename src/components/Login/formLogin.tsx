@@ -15,9 +15,14 @@ export const FormLogin = () => {
   const { loginUser } = useUserContext();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (localStorage.getItem("token") !== null) {
+      localStorage.removeItem("token");
+    }
+
     try {
         await loginUser(email, password)
-    } catch (error) {
+    } catch(error) {
         console.error(error);
     }
 

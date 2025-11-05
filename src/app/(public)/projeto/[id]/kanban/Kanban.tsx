@@ -1,10 +1,12 @@
 "use client"
 
 import { StatusProjeto } from "@/core/constants/StatusProjeto";
+import { Projeto } from "@/core/interface/Projeto";
 import {
     DndContext,
     DragEndEvent,
     DragStartEvent,
+    DragOverlay,
     closestCenter,
     useSensor,
     useSensors,
@@ -15,12 +17,14 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 
 import { useEffect, useState } from "react";
 import ColunaStatus from "./ColunaStatus";
+import { Ciclo } from "@/core/interface/Ciclo";
 import { Cartao } from "@/core/interface/Cartao";
-import { getCartoesPorIdCiclo } from "@/core/service/cartao";
+import { getCartoesPorIdCiclo, mudarStatusCard } from "@/core/service/cartao";
 import { visualizarCiclo } from "@/core/service/cicloService";
 import { useParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectItemText } from "@radix-ui/react-select";
+import { toast } from "sonner";
 
 export default function Kanban({ projetoId }: { projetoId: string }) {
 
@@ -28,11 +32,9 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
 
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
     const [activeId, setActiveId] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true); // Estado de loading
 
     const statuses: StatusProjeto[] = ["a_fazer", "em_andamento", "testes_validacao", "concluido"];
 
-    // Inicializa as colunas vazias
     const [columns, setColumns] = useState<Record<StatusProjeto, Cartao[]>>({
         a_fazer: [],
         em_andamento: [],
@@ -40,160 +42,133 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
         concluido: [],
     });
 
-    // BUSCA OS DADOS DA API QUANDO O COMPONENTE MONTA
-    useEffect(() => {
-        async function fetchCards() {
-            setIsLoading(true);
-            const allCards = await listCards(); // Chama a API
+    const [pendingMove, setPendingMove] = useState<{
+    item: Cartao
+        from: StatusProjeto
+        to: StatusProjeto
+        overId: string | null
+    } | null>(null);
 
-            if (allCards) {
-                // Processa a lista única de cartões e distribui nas colunas
-                const newColumns: Record<StatusProjeto, Cartao[]> = {
-                    a_fazer: [],
-                    em_andamento: [],
-                    testes_validacao: [],
-                    concluido: [],
-                };
-
-                for (const card of allCards) {
-                    // Garante que o status do cartão existe nas colunas
-                    if (newColumns[card.status as StatusProjeto]) {
-                        newColumns[card.status as StatusProjeto].push(card);
-                    }
-                }
-                setColumns(newColumns);
-            }
-            setIsLoading(false);
-        }
-
-        fetchCards();
-    }, []); // Array vazio garante que rode apenas uma vez
-
-    
-    // FUNÇÃO DE EDITAR ATUALIZADA (AGORA CHAMA A API)
-    const handleEditCard = async (updated: Cartao) => {
-        // 1. Atualização Otimista (UI atualiza antes da API)
-        setColumns((prev) => {
-            const newCols = { ...prev };
-            const col = newCols[updated.status as StatusProjeto];
-            if (!col) return prev; // Coluna não existe
-            const idx = col.findIndex((c) => c.id === updated.id);
-            if (idx !== -1) {
-                col[idx] = updated;
-            }
-            return newCols;
-        });
-        
-        // 2. Chama a API para persistir
-        try {
-            // Assumindo que CardUpdateDTO aceita os campos do formulário
-            const updateData = {
-                tempo_planejado_horas: updated.tempo_planejado_horas,
-                responsavel_id: updated.responsavel_id,
-                link: updated.link,
-            };
-            await updateCard(updated.id, updateData);
-        } catch (error) {
-            console.error("Falha ao atualizar o cartão:", error);
-            // TODO: Reverter a atualização otimista em caso de erro
-        }
-    };
-    
-    // FUNÇÃO DE DELETAR ATUALIZADA (AGORA CHAMA A API)
-    const handleDeleteCard = async (id: string) => {
-        // 1. Atualização Otimista
-        setColumns((prev) => {
-            const newCols = {} as typeof prev;
-            for (const [key, cards] of Object.entries(prev)) {
-                newCols[key as StatusProjeto] = cards.filter((c) => c.id !== id);
-            }
-            return newCols;
-        });
-
-        // 2. Chama a API para persistir
-        try {
-            await deleteCard(id);
-        } catch (error) {
-            console.error("Falha ao deletar o cartão:", error);
-            // TODO: Reverter a atualização otimista em caso de erro
-        }
-    };
-    
-
-    // DRAG-AND-DROP ATUALIZADO (AGORA CHAMA A API AO MOVER COLUNA)
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
+
         setActiveId(null);
+
         if (!over) return;
-        
+
         const activeId = String(active.id);
         const overId = String(over.id);
-        
+
         const activeContainer = active.data.current?.containerId as StatusProjeto | undefined;
-        // O container de destino pode ser o próprio cartão (reordenar) ou a coluna
-        const overContainer = over.data.current?.containerId as StatusProjeto | over.id as StatusProjeto;
-        
+        const overContainer = over.data.current?.containerId as StatusProjeto | undefined;
+
+
         if (!activeContainer || !overContainer) return;
-        
-        // 1. Mesma coluna: reordenar (apenas local)
+
+        // mesma coluna: reordenar
         if (activeContainer === overContainer) {
             setColumns((prev) => {
                 const col = [...prev[activeContainer]];
-                const oldIndex = col.findIndex((i) => i.id === activeId);
-                const overIndex = col.findIndex((i) => i.id === overId);
-                if (oldIndex === -1 || overIndex === -1) return prev;
-                return {
-                    ...prev,
-                    [activeContainer]: arrayMove(col, oldIndex, overIndex),
-                };
+                const oldIndex = col.findIndex((i) => String(i.id) === activeId);
+                const overIndex = col.findIndex((i) => String(i.id) === overId);
+
+                if (overIndex === -1) {
+                    if (oldIndex === -1) return prev;
+                    const [moved] = col.splice(oldIndex, 1);
+                    col.push(moved);
+
+                    return { ...prev, [activeContainer]: col };
+                }
+
+                if (oldIndex === -1) return prev;
+                const reordered = arrayMove(col, oldIndex, overIndex);
+                return { ...prev, [activeContainer]: reordered };
             });
             return;
         }
-        
-        // 2. Colunas diferentes: mover e persistir
-        
-        // Encontra o item que foi movido
-        const sourceCol = columns[activeContainer];
-        const activeIndex = sourceCol.findIndex((i) => i.id === activeId);
-        if (activeIndex === -1) return;
-        const [movedItem] = sourceCol.slice(activeIndex, activeIndex + 1);
 
-        // Atualização otimista do estado
-        setColumns((prev) => {
+        // colunas diferentes: mover (mover imediatamente)
+        if (activeContainer !== overContainer) {
+        setColumns(prev => {
             const source = [...prev[activeContainer]];
             const dest = [...prev[overContainer]];
-    
-            const oldIndex = source.findIndex((i) => i.id === activeId);
+
+            const oldIndex = source.findIndex(i => String(i.id) === activeId);
             if (oldIndex === -1) return prev;
-    
-            const [moved] = source.splice(oldIndex, 1);
-            moved.status = overContainer; // Atualiza o status localmente
-            dest.unshift(moved); // Adiciona no topo da nova coluna
-    
+
+            // remover do source
+            const [movedItem] = source.splice(oldIndex, 1);
+
+            // ajustar status do item movido
+            const moved = { ...movedItem, status: overContainer };
+
+            // opcional: inserir no começo
+            dest.unshift(moved);
+
+            console.log("overContainer", );
+
+            const resposta = mudarStatus(movedItem.id, overContainer.toString());
+
+            if (!resposta) {
+                toast.error('Erro ao mudar status');
+            }
+
+            toast.success('Status alterado com sucesso');
+
+            // se quiser inserir na posição do overId em vez do começo:
+            // const overIndexInDest = dest.findIndex(i => String(i.id) === overId);
+            // if (overIndexInDest === -1) dest.unshift(moved); else dest.splice(overIndexInDest, 0, moved);
+
             return {
-                ...prev,
-                [activeContainer]: source,
-                [overContainer]: dest,
+            ...prev,
+            [activeContainer]: source,
+            [overContainer]: dest,
             };
         });
 
-        // Chama a API para persistir a mudança de status
-        (async () => {
-            try {
-                // Envia apenas a mudança de status para a API
-                await updateCard(movedItem.id, { status: overContainer });
-            } catch (error) {
-                console.error("Falha ao mover o cartão:", error);
-                // TODO: Reverter a atualização otimista em caso de erro
-            }
-        })();
+        // limpa state relacionado ao drag
+        setPendingMove(null);
+        return;
+        }
+
+    };
+
+    async function mudarStatus(idCartao: string, status: string) {
+        const respostaStatus = await mudarStatusCard(idCartao, status);
+        const resposta = respostaStatus
+        return resposta
+    }
+
+    // confirma a movimentação
+    const confirmMove = () => {
+        if (!pendingMove) return;
+
+        setColumns(prev => {
+            const source = structuredClone(prev[pendingMove.from]);
+            const dest = structuredClone(prev[pendingMove.to]);
+
+            // Sempre insere no início da lista
+            const movedItem = structuredClone(pendingMove.item);
+            movedItem.status = pendingMove.to;
+
+            dest.unshift(movedItem); // <--- A diferença: sempre no topo
+
+            return {
+                ...prev,
+                [pendingMove.from]: source.filter(i => i.id !== movedItem.id),
+                [pendingMove.to]: dest,
+            };
+        });
+
+        const move = pendingMove;
+        setPendingMove(null);
+
     };
 
     const handleDragStart = (event: DragStartEvent) => {
         setActiveId(String(event.active.id));
     };
 
-    // Funções utilitárias (sem alteração)
     const formatStatus = (status: StatusProjeto | undefined): string => {
         switch (status) {
             case "a_fazer": return "A fazer";
@@ -202,6 +177,14 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
             case "concluido": return "Concluído";
             default: return "";
         }
+    };
+
+    const findItem = (id: string) => {
+        for (const s of statuses) {
+            const found = columns[s].find((c) => String(c.id) === id);
+            if (found) return found;
+        }
+        return undefined;
     };
 
     const getStatusColor = (status: StatusProjeto): string => {
@@ -224,8 +207,28 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
 
     async function getCartoes(idCiclo: string) {
         const resposta = await getCartoesPorIdCiclo(idCiclo);
-        console.log("cartoes", resposta);
         setCartoes(resposta);
+
+        const novasColunas: Record<StatusProjeto, Cartao[]> = {
+            "a_fazer": [],
+            "em_andamento": [],
+            "testes_validacao": [],
+            "concluido": [],
+        };
+
+        resposta.forEach((cartao: Cartao) => {
+            if (cartao.status === "a_fazer") {
+                novasColunas["a_fazer"].push(cartao);
+            } else if (cartao.status === "em_andamento") {
+                novasColunas["em_andamento"].push(cartao);
+            } else if (cartao.status === "testes_validacao") {
+                novasColunas["testes_validacao"].push(cartao);
+            } else if (cartao.status === "concluido") {
+                novasColunas["concluido"].push(cartao);
+            }
+        });
+
+        setColumns(novasColunas);
     }
 
     useEffect(() => {
@@ -234,7 +237,6 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
 
     return (
         <div>
-            {/* ... (Restante do seu JSX do header, sem alterações) ... */}
             <div className="flex flex-col justify-between items-center gap-10">
                 <div className="flex items-center justify-between w-full">
                     <div>
@@ -253,7 +255,13 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
                     >
                         <div className="text-white text-3xl flex items-center gap-2">
                             <strong>Ciclo</strong>: 
-                            <Select>
+                            <Select
+                                onValueChange={
+                                    (value) => {
+                                        getCartoes(value);
+                                    }
+                                }
+                            >
                                 <SelectTrigger className="bg-white text-black">
                                     <SelectValue placeholder="Selecione um ciclo" />
                                 </SelectTrigger>
@@ -281,16 +289,38 @@ export default function Kanban({ projetoId }: { projetoId: string }) {
                     <div className="flex justify-between h-[85%] relative gap-3 w-full">
                         {statuses.map((status) => (
                             <div className="w-full flex flex-1" key={status}>
-                                <ColunaStatus
-                                    categoria={[{ nome: formatStatus(status), color: getStatusColor(status) }]}
-                                    status={status}
-                                    cartoes={columns[status]} // Passa os cartões do estado
-                                    onEdit={handleEditCard}
-                                    onDelete={handleDeleteCard}
-                                />
+                                <SortableContext items={columns[status].map((c) => String(c.id))} strategy={verticalListSortingStrategy}>
+                                    <ColunaStatus
+                                        categoria={[{ nome: formatStatus(status), color: getStatusColor(status) }]}
+                                        status={status}
+                                        cartoes={columns[status]}
+                                    />
+
+                                </SortableContext>
                             </div>
                         ))}
                     </div>
+
+                    <DragOverlay>
+                    {activeId ? (
+                        <div className="bg-white p-3 rounded shadow-l teste2">
+                            {(() => {
+                                const item = findItem(activeId);
+                                if (!item) return null;
+                                return (
+                                    <>
+                                        <div className="h-16 bg-gray-200 rounded-sm mb-2" />
+
+                                        <div>
+                                            <h3 className="font-semibold">{item.descricao}</h3>
+                                            <p className="text-sm text-gray-600">Data: {item.created_at}</p>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </div>
+                    ) : null}
+                </DragOverlay>
                 </DndContext>
             </div>
         </div>
