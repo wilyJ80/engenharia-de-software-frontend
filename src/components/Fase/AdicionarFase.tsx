@@ -125,7 +125,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                   ))}
                 </select>
                 <Button
-                  
+                  variant={"secondary"}
                   onClick={handleAddArtefato}
                 >
                   Adicionar
@@ -155,7 +155,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
 
           <DialogFooter>
             <Button
-              className="bg-azul-claro hover:bg-azul-claro/60 mt-2 px-8"
+              variant={"secondary"}
               onClick={handleSalvar}
             >
               Salvar

@@ -14,6 +14,7 @@ import { Edit, Settings, Trash } from "lucide-react";
 import { toast } from 'sonner'
 import { atualizarCiclo, criarCiclo, deletarCiclo, visualizarCiclo } from "@/core/service/cicloService";
 import { useParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 type Ciclo = {
   id?: string;
@@ -22,7 +23,7 @@ type Ciclo = {
   projeto_id?: string;
 };
 
-export default function ciclo() {
+export default function Ciclo() {
   const [ciclos, setCiclos] = useState<Ciclo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -140,22 +141,28 @@ export default function ciclo() {
               </CardHeader>
 
               <CardFooter>
-                <div className="flex gap-2 justify-end w-full">
-                  <button className="p-1 cursor-pointer">
+                <div className="flex flex-col gap-2 justify-end w-full">
+                  <Button 
+                        variant={"secondary"}
+                        className="p-1 cursor-pointer">
                     <Settings size={18} />
-                  </button>
-                  <button className="p-1 cursor-pointer" onClick={() => handleEditClick(ciclo)}>
+                  </Button>
+                  <Button
+                         variant={"secondary"} 
+                         className="p-1 cursor-pointer" onClick={() => handleEditClick(ciclo)}>
                     <Edit size={18} />
-                  </button>
+                  </Button>
 
                   <ConfirmDialog
                     title="Excluir ciclo"
                     description={`Tem certeza que deseja excluir '${ciclo.name}'?`}
                     onConfirm={() => handleConfirmDelete(ciclo.id)}
                   >
-                    <button className="p-1 cursor-pointer">
+                    <Button 
+                          variant={"secondary"}
+                          className="p-1 cursor-pointer">
                       <Trash size={18} />
-                    </button>
+                    </Button>
                   </ConfirmDialog>
                 </div>
               </CardFooter>

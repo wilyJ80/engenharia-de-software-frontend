@@ -84,12 +84,12 @@ export default function CicloDialog({
       {/* Botão que abre o diálogo (apenas para modo adicionar, quando não controlado) */}
       {!controlled && (
         <DialogTrigger asChild>
-          <Button className="flex items-center gap-2 bg-azul-escuro text-white hover:bg-azul-claro transition">
+          <Button className="flex items-center gap-2 transition">
             <Plus size={18} />
             <span>Ciclo</span>
           </Button>
         </DialogTrigger>
-      )}
+      )} 
 
       {/* Conteúdo do diálogo */}
       <DialogContent className="sm:max-w-md bg-azul-escuro text-white border-none">
@@ -114,7 +114,6 @@ export default function CicloDialog({
               placeholder="Ex: Ciclo VI - Revisão"
               value={ciclo}
               onChange={(e) => setCiclo(e.target.value)}
-              className="bg-white text-black placeholder:text-gray-500"
             />
           </div>
 
@@ -127,13 +126,13 @@ export default function CicloDialog({
               placeholder="Ex: v1.0"
               value={versao}
               onChange={(e) => setVersao(e.target.value)}
-              className="bg-white text-black placeholder:text-gray-500"
+             
             />
           </div>
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSave} className="bg-azul-claro hover:bg-blue-400 text-white">
+          <Button variant={"secondary"} onClick={handleSave} >
             Salvar
           </Button>
         </DialogFooter>

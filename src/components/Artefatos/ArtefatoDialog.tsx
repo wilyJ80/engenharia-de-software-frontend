@@ -112,7 +112,9 @@ export default function ArtefatoDialog({
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSave}>
+          <Button
+                variant={"secondary"} 
+                onClick={handleSave}>
             Salvar
           </Button>
         </DialogFooter>

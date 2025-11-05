@@ -65,12 +65,13 @@ export default function Inicio() {
                             
                         
                             <div className="mt-4 pt-2">
-                                <button
-                                    className="bg-sky-500 hover:bg-sky-700 text-white px-3 py-1 rounded-md text-sm font-semibold transition duration-150"
+                                <Button asChild
                                     onClick={() => console.log(`Entrar no projeto: ${project.nome}`)}
                                 >
+                                    <Link href={`/projeto/${project.id}/ciclo`}>
                                     Entrar
-                                </button>
+                                    </Link>
+                                </Button>
                             </div>
                         </Card> 
                     ))}

@@ -52,7 +52,7 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
   }
 
   const handleRemoveArtefato = (artefato: Artefato) => {
-    setArtefatos((prev) => prev.filter((a) => a.id !== artefato.id))
+    setArtefatosSelecionados((prev) => prev.filter((a) => a.id !== artefato.id))
   }
 
   return (
@@ -116,6 +116,7 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
                   ))}
                 </select>
                 <Button
+                  variant={"secondary"}
                   onClick={handleAddArtefato}
                 >
                   Adicionar
@@ -145,8 +146,8 @@ export const EditarFase = ({ fase, onEdit }: EditarFaseProps) => {
 
             <DialogFooter>
               <Button
+                variant={"secondary"}
                 onClick={handleSalvar}
-                className=" cursor-pointer rounded-md border-2 px-10 "
               >
                 Salvar
               </Button>

@@ -53,13 +53,13 @@ export default function CreateUserModal({ cancelCreate, confirmCreate }: EditUse
                 <div className="flex gap-2 justify-end">
                     <Button
                         onClick={cancelCreate}
-                        className="bg-gray-300 hover:bg-gray-400"
+                        variant={"destructive"}
                     >
                         Cancelar
                     </Button>
                     <Button
                         onClick={handleSave}
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                        variant={"secondary"}
                     >
                         Salvar
                     </Button>
