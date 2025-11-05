@@ -16,7 +16,7 @@ import { useState, useEffect } from "react";
 
 type ArtefatoItem = {
   id?: string | number;
-  name: string;
+  nome: string;
 };
 
 export default function ArtefatoDialog({
@@ -45,7 +45,7 @@ export default function ArtefatoDialog({
 
   useEffect(() => {
     if (initialItem) {
-      setNome(initialItem.name ?? "");
+      setNome(initialItem.nome ?? "");
     } else {
       setNome("");
     }
@@ -56,7 +56,7 @@ export default function ArtefatoDialog({
 
     const item: ArtefatoItem = {
       id: initialItem?.id ?? Date.now(),
-      name: nome,
+      nome: nome,
     };
 
     if (initialItem) {

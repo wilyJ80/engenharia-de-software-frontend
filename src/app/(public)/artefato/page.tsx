@@ -9,7 +9,7 @@ import { atualizarArtefato, criarArtefato, deletarArtefato, visualizarArtefato }
 
 type Artefato = {
   id?: string | number
-  name: string
+  nome: string
 }
 
 export default function artefato() {
@@ -45,7 +45,7 @@ export default function artefato() {
       try {
         setLoading(true)
         setError(null)
-        const created = await criarArtefato(novoArtefato.name)
+        const created = await criarArtefato(novoArtefato.nome)
         setArtefatos(prev => [...prev, created])
         toast.success('Artefato criado com sucesso')
       } catch (err: any) {
@@ -68,7 +68,7 @@ export default function artefato() {
       try {
         setLoading(true)
         setError(null)
-        const updated = await atualizarArtefato(item.id, item.name)
+        const updated = await atualizarArtefato(item.id, item.nome)
         setArtefatos(prev => prev.map(a => (a.id === updated.id ? updated : a)))
           toast.success('Artefato atualizado com sucesso')
       } catch (err: any) {

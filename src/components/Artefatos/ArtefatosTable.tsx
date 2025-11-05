@@ -4,7 +4,7 @@ import React from 'react'
 
 type Artefato = {
   id?: string | number
-  name: string
+  nome: string
 }
 
 export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Artefato[]; onEdit?: (item: Artefato) => void; onRemove?: (id?: string | number) => void; }) {
@@ -33,7 +33,7 @@ export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Art
             const rowBg = isEven ? 'bg-cinza-escuro text-gray-800' : 'bg-cinza-claro text-gray-800'
             return (
               <tr key={item.id} className={`${rowBg}`}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{item.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{item.nome}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <div className="flex gap-2">
                     <button

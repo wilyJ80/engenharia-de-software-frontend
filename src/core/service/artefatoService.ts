@@ -35,7 +35,7 @@ async function criarArtefato(nome: string) {
 
   const created = await response.json();
   // resposta contém { nome, id, created_at, updated_at }
-  return { id: created.id, name: created.nome };
+  return { id: created.id, nome: created.nome };
 }
 
 async function atualizarArtefato(id: string | number, nome: string) {
@@ -56,7 +56,7 @@ async function atualizarArtefato(id: string | number, nome: string) {
 
   const updated = await response.json();
   // espera { nome, id }
-  return { id: updated.id, name: updated.nome };
+  return { id: updated.id, nome: updated.nome };
 }
 
 async function deletarArtefato(id: string | number) {
