@@ -1,7 +1,5 @@
 "use client";
 
-export const runtime = 'edge';
-
 import { useState, useEffect } from "react";
 import CicloDialog from "@/components/Ciclos/CicloDialog";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
