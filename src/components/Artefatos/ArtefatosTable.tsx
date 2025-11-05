@@ -1,10 +1,11 @@
 "use client"
 
 import React from 'react'
+import { Button } from '../ui/button'
 
 type Artefato = {
   id?: string | number
-  name: string
+  nome: string
 }
 
 export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Artefato[]; onEdit?: (item: Artefato) => void; onRemove?: (id?: string | number) => void; }) {
@@ -33,23 +34,24 @@ export default function ArtefatosTable({ items, onEdit, onRemove }: { items: Art
             const rowBg = isEven ? 'bg-cinza-escuro text-gray-800' : 'bg-cinza-claro text-gray-800'
             return (
               <tr key={item.id} className={`${rowBg}`}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{item.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{item.nome}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <div className="flex gap-2">
-                    <button
+                    <Button
                       type="button"
-                      className="px-3 py-1 text-sm bg-azul-escuro text-white rounded"
+                      className="px-4 py-1 text-sm "
                       onClick={() => onEdit?.(item)}
                     >
                       Editar
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="px-3 py-1 text-sm bg-red-500 text-white rounded"
+                      variant="destructive"
+                      className="px-3 py-1 text-sm"
                       onClick={() => onRemove?.(item.id)}
                     >
                       Remover
-                    </button>
+                    </Button>
                   </div>
                 </td>
               </tr>

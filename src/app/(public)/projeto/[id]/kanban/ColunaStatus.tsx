@@ -1,69 +1,65 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { useDroppable } from "@dnd-kit/core";
-// import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { StatusProjeto } from "@/core/constants/StatusProjeto";
-import { Projeto } from "@/core/interface/Projeto";
 import CartaoProjeto from "./CartaoProjeto";
 import { Cartao } from "@/core/interface/Cartao";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+
 
 export interface Categoria {
-  nome: string;
-  color: string;
+    nome: string;
+    color: string;
 }
 
 interface Props {
-  status: StatusProjeto;
-  categoria: Categoria[];
-  cartoes: Cartao[];
+    status: StatusProjeto;
+    categoria: Categoria[];
+    cartoes: Cartao[];
+    // ATUALIZADO: Funções agora são assíncronas
+    onEdit: (updated: Cartao) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
 }
 
-// const getStatusColor = (status: StatusProjeto): string => {
-//   switch (status) {
-//       case "PENDING": return "#99A1AF";
-//       case "UNDER_CONSTRUCTION": return "red";
-//       case "WAITING_FOR_REVIEW": return "#656149";
-//       case "COMPLETED": return "darkgreen";
-//   }
-// };
+export default function ColunaStatus({ status, categoria, cartoes, onEdit, onDelete }: Props) {
+    const { setNodeRef } = useDroppable({
+        id: status,
+        data: { containerId: status },
+    });
 
+    return (
+        <div ref={setNodeRef} className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 rounded-2xl">
+            {/* Cabeçalho */}
+            <div className="flex justify-between mx-2 mt-2 items-center mb-2">
+                <div className="flex items-center gap-2">
+                    {categoria.map((c) => (
+                        <div key={c.nome} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded" style={{ backgroundColor: c.color }} />
+                            <span className="text-xl">{c.nome}</span>
+                        </div>
+                    ))}
+                </div>
 
-export default function ColunaStatus({ status, categoria, cartoes }: Props) {
-  // Droppable container com data.containerId = status
-  const { setNodeRef } = useDroppable({
-    id: status,
-    data: { containerId: status },
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className="w-full flex flex-col max-h-full gap-2 pt-2 px-1 rounded-2xl"
-    >
-      <div
-        className="flex justify-between mx-2 mt-2 items-center mb-2"
-      >
-        <div className="flex items-center gap-2">
-          {categoria.map((c) => (
-            <div key={c.nome} className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded" style={{ backgroundColor: c.color }} />
-              <span className="text-xl">{c.nome}</span>
+                <div className="flex items-center justify-center w-6 h-6 bg-black rounded-full">
+                    <span className="font-semibold text-white text-md">{cartoes.length}</span>
+                </div>
             </div>
-          ))}
-        </div>
 
-        <div className={`flex items-center justify-center w-6 h-6 bg-black rounded-full`}>
-          <span className="font-semibold text-white text-md">{cartoes.length}</span>
+            {/* Lista de Cartões */}
+            <SortableContext items={cartoes.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-3 overflow-y-auto px-1 scrollbar-style pb-1">
+                    {cartoes.map((c) => (
+                        <CartaoProjeto
+                            key={c.id}
+                            cartao={c}
+                            containerId={status}
+                            onEdit={onEdit} // Repassa a prop atualizada
+                            onDelete={onDelete} // Repassa a prop atualizada
+                        />
+                    ))}
+                </div>
+            </SortableContext>
         </div>
-      </div>
-
-      <div className="space-y-3 overflow-y-auto px-[4px] scrollbar-style pb-1">
-          {cartoes.map((c) => (
-            // PASSA containerId para o cartão (necessário para usar data.containerId no useSortable)
-            <CartaoProjeto cartao={c} containerId={status} />
-          ))}
-      </div>
-    </div>
-  );
+    );
 }

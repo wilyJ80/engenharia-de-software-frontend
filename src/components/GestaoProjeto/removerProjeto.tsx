@@ -24,7 +24,8 @@ export const RemoverProjeto = ({ onRemove, projeto }: RemoverProjetoProps) => {
     return (<>
             <Button 
                 title="Remover"
-                className="bg-azul-claro hover:bg-red-500 hover:cursor-pointer"
+                variant={"secondary"}
+                className="hover:bg-red-500 hover:cursor-pointer"
                 onClick={() => setOpen(true)}> <Trash2 />
             </Button>
 

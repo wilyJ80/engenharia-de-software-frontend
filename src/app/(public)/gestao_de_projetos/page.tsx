@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -42,18 +43,18 @@ export default function GestaoDeProjetos() {
                     <p className="text-white text-xl bg-blue-900 rounded-xl px-8 py-4 shadow">
                         <strong>Ciclo</strong>: Prospecção | Versão: 1.0.0
                     </p>
-                    <button className="bg-blue-600 text-xl px-8 py-4 rounded-xl text-white shadow hover:bg-blue-700">
+                    <Button className="text-xl px-8 py-4 rounded-xl">
                         Sair
-                    </button>
+                    </Button>
                 </div>
             </div>
 
             <Dialog>
                 <DialogTrigger asChild>
-                    <button title="Novo artefato" className="flex items-center gap-2 text-white hover:cursor-pointer rounded-lg w-fit self-end bg-azul-escuro px-5 py-2 ">
+                    <Button title="Novo artefato" className="flex items-center gap-2 rounded-lg w-fit self-end  px-5 py-2 ">
                         <Plus size={19} />
                         <span className="text-lg">Artefato</span>
-                    </button>
+                    </Button>
                 </DialogTrigger>
 
                 <DialogContent>
@@ -108,7 +109,7 @@ export default function GestaoDeProjetos() {
                             <Input />
                         </div>
 
-                        <button className="bg-azul-escuro w-full rounded-md py-3 text-white hover:cursor-pointer">Salvar</button>
+                        <Button className=" w-full rounded-md py-3 hover:cursor-pointer">Salvar</Button>
 
                     </form>
                 </DialogContent>

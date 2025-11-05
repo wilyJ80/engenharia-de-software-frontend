@@ -11,8 +11,8 @@ export default function Menu() {
                 className="
                     flex flex-col items-center
                     text-black
-                    bg-azul-escuro w-full h-[500px]
-                    rounded-xl px-3  gap-3
+                    bg-azul-escuro w-full h-full
+                    rounded-xl px-3  gap-3 
                 "
             >
                 {

@@ -35,24 +35,31 @@ export default function CreateUserModal({ cancelCreate, confirmCreate }: EditUse
                 <div className="flex flex-col text-white gap-3">
                     <div className="flex items-center gap-2">
                         <LuUserRound size={20} />
-                        <Input value={nome} onChange={(e) => setNome(e.target.value)} />
+                        <Input 
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
+                            placeholder="Insira um nome" />
                     </div>
                     <div className="flex items-center gap-2">
                         <LuAtSign size={20} />
-                        <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <Input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Insira um email"
+                        />
                     </div>
                 </div>
 
                 <div className="flex gap-2 justify-end">
                     <Button
                         onClick={cancelCreate}
-                        className="bg-gray-300 hover:bg-gray-400"
+                        variant={"destructive"}
                     >
                         Cancelar
                     </Button>
                     <Button
                         onClick={handleSave}
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                        variant={"secondary"}
                     >
                         Salvar
                     </Button>

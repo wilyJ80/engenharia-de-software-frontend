@@ -36,7 +36,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
         
     return (
         <>
-            <Button title="Editar" onClick={() => setOpen(true)} className="bg-azul-claro hover:bg-transparent hover:cursor-pointer"> <Pencil /> </Button>
+            <Button variant={"secondary"} title="Editar" onClick={() => setOpen(true)}> <Pencil /> </Button>
             { open && (
             <Dialog  open={open} onOpenChange={setOpen}>
                <DialogContent className="bg-azul-escuro text-white border-none rounded-md">
@@ -49,7 +49,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
                              onChange={onNomeChange}
                              type="text"
                              placeholder="Nome do Projeto"
-                             className="bg-azul-escuro placeholder-red text-white"
+                            
                              value={nome}/>
                     </div>
 
@@ -58,7 +58,6 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
                         <Textarea 
                                 onChange={onDescricaoChange}
                                 placeholder="Descrição do Projeto"
-                                className="bg-azul-escuro placeholder-white text-white mt-2"
                                 value={descritivo}/>
                     </div>
                 <div>

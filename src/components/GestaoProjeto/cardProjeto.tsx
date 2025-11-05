@@ -41,7 +41,7 @@ export const CardProjeto = ({ projeto, onRemove, onEdit }: CardProjetoProps) => 
                          <Kanban />
                         </Link>
                     </Button>
-                    <Button title="Ciclos" asChild className="bg-azul-claro hover:bg-transparent hover:cursor-pointer">
+                    <Button variant={"secondary"} title="Ciclos" asChild >
                         <Link href={`/projeto/${projeto.id}/ciclo`} className="">
                             <RefreshCcw />
                         </Link>

@@ -16,7 +16,7 @@ import { useState, useEffect } from "react";
 
 type ArtefatoItem = {
   id?: string | number;
-  name: string;
+  nome: string;
 };
 
 export default function ArtefatoDialog({
@@ -45,7 +45,7 @@ export default function ArtefatoDialog({
 
   useEffect(() => {
     if (initialItem) {
-      setNome(initialItem.name ?? "");
+      setNome(initialItem.nome ?? "");
     } else {
       setNome("");
     }
@@ -56,7 +56,7 @@ export default function ArtefatoDialog({
 
     const item: ArtefatoItem = {
       id: initialItem?.id ?? Date.now(),
-      name: nome,
+      nome: nome,
     };
 
     if (initialItem) {
@@ -76,7 +76,7 @@ export default function ArtefatoDialog({
       {/* Botão que abre o diálogo (apenas para modo adicionar, quando não controlado) */}
       {!controlled && (
         <DialogTrigger asChild>
-          <Button className="flex items-center gap-2 bg-azul-escuro text-white hover:bg-azul-claro transition">
+          <Button className="flex items-center gap-2 transition">
             <Plus size={18} />
             <span>Artefato</span>
           </Button>
@@ -112,7 +112,9 @@ export default function ArtefatoDialog({
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSave} className="bg-azul-claro hover:bg-blue-400 text-white">
+          <Button
+                variant={"secondary"} 
+                onClick={handleSave}>
             Salvar
           </Button>
         </DialogFooter>

@@ -1,8 +1,10 @@
 
 "use client"; 
+import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Projeto } from '@/core/interface/Projeto';
 import { getProjetos } from '@/core/service/ProjetoService';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'; 
 
 export default function Inicio() {
@@ -26,12 +28,13 @@ export default function Inicio() {
             
             
             <div className="flex justify-end p-4 mx-auto max-w-4xl pt-8">
-                <button 
+                <Link
+                    href={"/login"}
                     className="px-4 py-2 bg-azul-escuro text-white rounded-md hover:bg-azul-claro transition duration-150"
                     onClick={() => console.log("Fazer Login")}
                 >
                     + Fazer Login
-                </button>
+                </Link>
             </div>
 
         
@@ -60,12 +63,13 @@ export default function Inicio() {
                             </div>
                         
                             <div className="mt-4 pt-2">
-                                <button
-                                    className="bg-sky-500 hover:bg-sky-700 text-white px-3 py-1 rounded-md text-sm font-semibold transition duration-150"
+                                <Button asChild
                                     onClick={() => console.log(`Entrar no projeto: ${project.nome}`)}
                                 >
+                                    <Link href={`/projeto/${project.id}/ciclo`}>
                                     Entrar
-                                </button>
+                                    </Link>
+                                </Button>
                             </div>
                         </Card> 
                     ))}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import {
   Dialog,
@@ -13,6 +13,7 @@ import { Label } from "@radix-ui/react-label"
 import { Textarea } from "../ui/textarea"
 import { X } from "lucide-react"
 import { Fase } from "@/core/interface/Fase"
+import { visualizarArtefato } from "@/core/service/artefatoService"
 
 const artefatosMock = [
   "Casos de Uso",
@@ -23,39 +24,52 @@ const artefatosMock = [
 ]
 
 interface AdicionarFaseProps {
-  onAdd: (fase: Omit<Fase, "id" | "ordem">) => void
+  onAdd: (fase: Omit<Fase, "id">) => void
 }
 
 export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
   const [open, setOpen] = useState(false)
   const [nome, setNome] = useState("")
+  const [ordem, setOrdem] = useState(1)
   const [descritivo, setDescritivo] = useState("")
-  const [artefatoSelecionado, setArtefatoSelecionado] = useState("")
-  const [artefatos, setArtefatos] = useState<string[]>([])
+  const [artefatoParaAdicionar, setArtefatoParaAdicionar] = useState<Artefato | null>(null)
+  const [artefatosSelecionados, setArtefatosSelecionados] = useState<Artefato[]>([])
+  const [artefatos, setArtefatos] = useState<Artefato[]>([])
 
+  useEffect(() => {
+    const fetchArtefatos = async () => {
+      try{
+        const res = await visualizarArtefato()
+        setArtefatos(res)
+      }catch (error) {
+        console.error('Erro ao buscar artefatos:', error)
+      }
+    }
+    fetchArtefatos()
+  }, [])
   const handleAddArtefato = () => {
-    if (!artefatoSelecionado || artefatos.includes(artefatoSelecionado)) return
-    setArtefatos((prev) => [...prev, artefatoSelecionado])
-    setArtefatoSelecionado("")
+    if (!artefatoParaAdicionar || artefatosSelecionados.includes(artefatoParaAdicionar)) return
+    setArtefatosSelecionados((prev) => [...prev, artefatoParaAdicionar])
+    setArtefatoParaAdicionar(null)
   }
 
-  const handleRemoveArtefato = (artefato: string) => {
-    setArtefatos((prev) => prev.filter((a) => a !== artefato))
+  const handleRemoveArtefato = (artefato: Artefato) => {
+    setArtefatosSelecionados((prev) => prev.filter((a) => a.id !== artefato.id))
   }
 
   const handleSalvar = () => {
     if (!nome.trim() || !descritivo.trim()) return
-    onAdd({ nome, descritivo, artefatos })
+    onAdd({ nome, descritivo, artefatos: artefatosSelecionados, ordem })
     setOpen(false)
     setNome("")
     setDescritivo("")
-    setArtefatos([])
+    setArtefatosSelecionados([])
+    setOrdem(1)
   }
 
   return (
     <>
       <Button
-        className="bg-azul-escuro hover:bg-azul-claro text-white rounded-md"
         onClick={() => setOpen(true)}
       >
         + Fase
@@ -72,7 +86,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Nome da fase"
-                className="bg-azul-escuro border text-white placeholder-gray-300"
+                
               />
             </div>
 
@@ -82,27 +96,36 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
                 value={descritivo}
                 onChange={(e) => setDescritivo(e.target.value)}
                 placeholder="Descrição da fase"
-                className="bg-azul-escuro border text-white placeholder-gray-300"
+                
               />
             </div>
-
+            <div>
+              <Label>Ordem:</Label>
+              <Input
+                type="number"
+                value={ordem}
+                onChange={(e) => setOrdem(Number(e.target.value))}
+                placeholder="Ordem da fase"
+               
+              />
+            </div>
             <div>
               <Label>Artefatos:</Label>
               <div className="flex gap-2 mt-1">
                 <select
-                  className="border rounded-md py-1 px-2 w-full text-black"
-                  value={artefatoSelecionado}
-                  onChange={(e) => setArtefatoSelecionado(e.target.value)}
+                  className="border bg-white rounded-md py-1 px-2 w-full text-black"
+                  value={artefatoParaAdicionar?.nome}
+                  onChange={(e) => setArtefatoParaAdicionar(artefatos.find(a => a.nome === e.target.value) || null)}
                 >
                   <option value="">Selecione um artefato</option>
-                  {artefatosMock.map((artefato) => (
-                    <option key={artefato} value={artefato}>
-                      {artefato}
+                  {artefatos.map((artefato) => (
+                    <option key={artefato.id} value={artefato.nome}>
+                      {artefato.nome}
                     </option>
                   ))}
                 </select>
                 <Button
-                  className="bg-azul-claro hover:bg-azul-claro/70"
+                  variant={"secondary"}
                   onClick={handleAddArtefato}
                 >
                   Adicionar
@@ -111,18 +134,18 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
 
               {artefatos.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {artefatos.map((a) => (
+                  {artefatosSelecionados.map((a) => (
                     <div
-                      key={a}
+                      key={a.id}
                       className="flex items-center gap-1 bg-azul-claro text-white rounded-full px-3 py-1"
                     >
-                      <span>{a}</span>
-                      <button
+                      <span>{a.nome}</span>
+                      <Button
                         onClick={() => handleRemoveArtefato(a)}
-                        className="hover:text-red-300"
+                        variant={"destructive"}
                       >
                         <X size={16} />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -132,7 +155,7 @@ export const AdicionarFase = ({ onAdd }: AdicionarFaseProps) => {
 
           <DialogFooter>
             <Button
-              className="bg-azul-claro hover:bg-azul-claro/60 mt-2 px-8"
+              variant={"secondary"}
               onClick={handleSalvar}
             >
               Salvar

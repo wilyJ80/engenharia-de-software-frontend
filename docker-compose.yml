@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: gpsSuperA-front
+    container_name: gpsSuperA
     env_file:
       - .env
     environment:
