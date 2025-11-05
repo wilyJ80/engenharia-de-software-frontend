@@ -1,5 +1,6 @@
 export interface Cartao {
     id: string;
+    projeto_id: string;
     status: string;
     tempo_planejado_horas: number,
     link:string,
