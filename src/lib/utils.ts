@@ -35,7 +35,7 @@ function hashString(s: string | undefined) {
   return Math.abs(h);
 }
 
-export function randomColor(seed: string) {
+export function randomColor(seed: string | undefined) {
   if (!seed) return classes[0];
   const idx = hashString(seed.toString()) % classes.length;
   return classes[idx];

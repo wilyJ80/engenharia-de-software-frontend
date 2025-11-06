@@ -1,4 +1,5 @@
 import { Projeto, ProjetoComParticipantes } from "../interface/Projeto";
+import { Usuario } from "../interface/Usuario";
 
 const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
 
@@ -15,7 +16,7 @@ export const getProjetos = async (): Promise<ProjetoComParticipantes[]> => {
 };
 
 
-export const createProjeto = async (data: { nome: string; descritivo: string, responsaveis_id: string[]}) => {
+export const createProjeto = async (data: { nome: string; descritivo: string, responsaveis_id: Usuario[] | undefined}) => {
     const response = await fetch(`${urlBase}/projetos`, {
         method: 'POST',
         headers: {
@@ -29,7 +30,7 @@ export const createProjeto = async (data: { nome: string; descritivo: string, re
     return response.json();
 }
 
-export const updateProjeto = async (id: string, data: Partial<{ nome: string; descritivo: string, responsaveis_id: string[] }>) => {
+export const updateProjeto = async (id: string, data: Partial<ProjetoComParticipantes>) => {
     console.log("Atualizando projeto:", id, data);
     const response = await fetch(`${urlBase}/projetos/${id}`, {
         method: 'PUT',

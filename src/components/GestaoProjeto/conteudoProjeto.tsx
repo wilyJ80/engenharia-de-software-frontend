@@ -6,6 +6,7 @@ import { CardProjeto } from "./cardProjeto"
 import { Projeto, ProjetoComParticipantes } from "@/core/interface/Projeto"
 import { createProjeto, deleteProjeto, getProjetos, updateProjeto } from "@/core/service/ProjetoService"
 import { toast } from "sonner"
+import { Usuario } from "@/core/interface/Usuario"
 
 export const ConteudoProjeto = () => {
     const [projetos, setProjetos] = useState<ProjetoComParticipantes[] | []>([]);
@@ -21,8 +22,8 @@ export const ConteudoProjeto = () => {
            fetchProjetos();
        }, []);
 
-    const handleAddProjeto = async (novoProjeto: { nome: string; descritivo: string; participantes: { id: string; nome: string }[] }) => {
-        const responsaveis_id = novoProjeto.participantes.map(participante => participante.id);
+    const handleAddProjeto = async (novoProjeto: { nome: string; descritivo: string; participantes: Usuario[] }) => {
+        const responsaveis_id = novoProjeto.participantes.map(participante => participante.id) as Usuario[] || [];
         try {
             const res = await createProjeto({ ...novoProjeto, responsaveis_id });
             setProjetos([...projetos, { ...res, responsaveis: novoProjeto.participantes}]);
@@ -45,7 +46,7 @@ export const ConteudoProjeto = () => {
     const handleEditProjeto = async (projetoEditado: Partial<ProjetoComParticipantes>) => {
         try {
             if(!projetoEditado.id) return;
-            const responsaveis_id = projetoEditado.responsaveis_dto?.map(participante => participante.id) || [];
+            const responsaveis_id = projetoEditado.responsaveis_id?.map(participante => participante.id) as Usuario[] || [];
             const res = await updateProjeto(projetoEditado.id, { ...projetoEditado, responsaveis_id });
             setProjetos(projetos.map(projeto => 
                 projeto.id === projetoEditado.id ? res : projeto

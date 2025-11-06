@@ -23,16 +23,16 @@ import { X } from "lucide-react";
 
 
 interface AdicionarProjetoProps {
-    onAddProjeto: (novoProjeto: { nome: string; descritivo: string; participantes: { id: string; nome: string }[] }) => void;
+    onAddProjeto: (novoProjeto: { nome: string; descritivo: string; participantes: Usuario[] }) => void;
 }
 
 export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState("");
     const [descritivo, setDescritivo] = useState("");
-    const [ participantes, setParticipantes ] = useState<{ id: string; nome: string }[]>([]);
-    const [ participanteParaAdicionar, setParticipanteParaAdicionar ] = useState<{id: string; nome: string} | null>(null);
-    const [ participantesSelecionados, setParticipantesSelecionados ] = useState<{ id: string; nome: string }[]>([]);
+    const [ participantes, setParticipantes ] = useState<Usuario[]>([]);
+    const [ participanteParaAdicionar, setParticipanteParaAdicionar ] = useState<Usuario | null>(null);
+    const [ participantesSelecionados, setParticipantesSelecionados ] = useState<Usuario[]>([]);
     
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export const AdicionarProjeto = ({ onAddProjeto }: AdicionarProjetoProps) => {
         setDescritivo(e.target.value);
     }
 
-    const handleRemoveParticipante = (id: string) => {
+    const handleRemoveParticipante = (id: string | undefined) => {
         setParticipantesSelecionados(prev => prev.filter(participante => participante.id !== id));
     }
 

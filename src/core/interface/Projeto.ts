@@ -11,6 +11,6 @@ interface Projeto {
 }
 
 interface ProjetoComParticipantes extends Projeto {
-    responsaveis_dto: Usuario[];
+    responsaveis_id: Usuario[];
 }
 export type { Projeto, ProjetoComParticipantes };

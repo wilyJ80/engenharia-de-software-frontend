@@ -32,7 +32,7 @@ export const getUsuarioById = async (id: string) => {
     return response.json();
 };
 
-export const updateUsuario = async (id: string, data: { nome: string; email: string, senha: string }) => {
+export const updateUsuario = async (id: string | undefined, data: { nome: string | undefined; email: string | undefined, senha: string }) => {
     console.log(data)
     const response = await fetch(`${urlBase}/usuarios/${id}`, {
         method: 'PUT',  
@@ -48,7 +48,7 @@ export const updateUsuario = async (id: string, data: { nome: string; email: str
     return response.json();
 };
 
-export const deleteUsuario = async (id: string) => {
+export const deleteUsuario = async (id: string | undefined) => {
     const response = await fetch(`${urlBase}/usuarios/${id}`, {
         method: 'DELETE',
         headers: {

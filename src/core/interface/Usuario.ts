@@ -1,6 +1,6 @@
 interface Usuario {
-    id: string
-    nome: string
+    id?: string
+    nome?: string
     email?: string
     created_at?: string
     updated_at?: string

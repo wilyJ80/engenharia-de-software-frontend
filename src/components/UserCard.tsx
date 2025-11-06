@@ -3,8 +3,8 @@ import { LuUserRound } from "react-icons/lu";
 import { LuAtSign } from "react-icons/lu";
 
 export interface UserCardProps {
-    name: string;
-    email: string;
+    name: string | undefined;
+    email: string | undefined;
     onDelete: () => void;
     onEdit: () => void;
 }

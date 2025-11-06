@@ -41,9 +41,9 @@ export default function Menu() {
 
                                 <div className="flex items-center gap-2 self-start">
                                     <div className={`w-6 h-6 p-4 flex justify-center items-center rounded-full ${randomColor(user?.id)}`}  style={{ boxShadow: "2px 2px 2px rgba(0, 0, 0, .5)"}}>
-                                        <span className="text-2xl">{user?.nome[0].toUpperCase()}</span>
+                                        <span className="text-2xl">{user.nome && user?.nome[0].toUpperCase()}</span>
                                     </div>
-                                    <p>{user?.nome[0].toUpperCase()}{user?.nome.slice(1)}</p>
+                                    <p>{user.nome && user?.nome[0].toUpperCase()}{user.nome && user?.nome.slice(1)}</p>
                                 </div>
 
                                 <p className="flex items-center gap-2 self-start">

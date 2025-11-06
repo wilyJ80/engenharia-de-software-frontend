@@ -16,6 +16,7 @@ import { Textarea } from "../ui/textarea";
 import { useEffect, useState } from "react";
 import { Projeto, ProjetoComParticipantes } from "@/core/interface/Projeto";
 import { getUsuarios } from "@/core/service/UsuarioService";
+import { Usuario } from "@/core/interface/Usuario";
 interface EditarProjetoProps {
     projeto: ProjetoComParticipantes,
     onEdit: (projeto: ProjetoComParticipantes) => void
@@ -25,9 +26,9 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
      const [open, setOpen] = useState(false);
      const [nome, setNome] = useState(projeto.nome);
      const [descritivo, setDescritivo] = useState(projeto.descritivo);
-     const [ participantes, setParticipantes ] = useState<{ id: string; nome: string }[]>([]);
-     const [ participanteParaAdicionar, setParticipanteParaAdicionar ] = useState<{id: string; nome: string} | null>(null);
-     const [ participantesSelecionados, setParticipantesSelecionados ] = useState<{ id: string; nome: string }[]>(projeto.responsaveis_dto || []);
+     const [ participantes, setParticipantes ] = useState<Usuario[]>([]);
+     const [ participanteParaAdicionar, setParticipanteParaAdicionar ] = useState<Usuario | null>(null);
+     const [ participantesSelecionados, setParticipantesSelecionados ] = useState<Usuario[]>(projeto.responsaveis_id || []);
     
     useEffect(() => {
             const fetchParticipantes = async () => {
@@ -49,7 +50,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
             setDescritivo(e.target.value);
         }
         
-        const handleRemoveParticipante = (id: string) => {
+        const handleRemoveParticipante = (id: string | undefined) => {
             setParticipantesSelecionados(prev => prev.filter(participante => participante.id !== id));
         }
 
@@ -63,7 +64,7 @@ export const EditarProjeto = ({projeto, onEdit }: EditarProjetoProps) => {
 
         const handleEditar = () => {
             if (!nome.trim() || !descritivo.trim()) return;
-            onEdit({id: projeto.id, nome, descritivo, responsaveis_dto: participantesSelecionados });
+            onEdit({id: projeto.id, nome, descritivo, responsaveis_id: participantesSelecionados });
             setOpen(false);
             setNome("");
             setDescritivo("");

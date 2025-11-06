@@ -28,14 +28,14 @@ export default function UserManager() {
 
 
     const [showConfirm, setShowConfirm] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<string | null>(null);
+    const [userToDelete, setUserToDelete] = useState<string | undefined>(undefined);
 
     const [showEditCard, setShowEditCard] = useState(false);
     const [userToEdit, setUserToEdit] = useState<Usuario | null>(null);
 
     const [showCreateCard, setShowCreateCard] = useState(false);
 
-    const handleDeleteClick = (id: string) => {
+    const handleDeleteClick = (id: string | undefined) => {
         setUserToDelete(id);
         setShowConfirm(true);
     };
@@ -55,21 +55,21 @@ export default function UserManager() {
     }
 
     setShowConfirm(false);
-    setUserToDelete(null);
+    setUserToDelete(undefined);
     };
 
     const cancelDelete = () => {
         setShowConfirm(false);
-        setUserToDelete(null);
+        setUserToDelete(undefined);
     };
 
-    const handleEditClick =  (id: string) => {
+    const handleEditClick =  (id: string | undefined) => {
         const user = users.find((u) => u.id === id);
         if (user) setUserToEdit(user);
         setShowEditCard(true);
     };
 
-    const confirmEdit = async (data: { nome: string; email: string }) => {
+    const confirmEdit = async (data: Usuario) => {
         console.log("Confirmando edição......", userToEdit?.id);
         try {
             if (userToEdit) {

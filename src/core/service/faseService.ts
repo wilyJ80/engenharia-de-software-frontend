@@ -1,4 +1,3 @@
-import { url } from "inspector"
 import { Fase } from "../interface/Fase"
 const urlBase = process.env.NEXT_PUBLIC_ENDERECO_API
 export const getFases = async (): Promise<Fase[]> => {
@@ -10,9 +9,11 @@ export const getFases = async (): Promise<Fase[]> => {
     return data || []
 }
 
+import { toast } from "sonner";
+
+const ulrBase = process.env.NEXT_PUBLIC_ENDERECO_API
+
 export const createFase = async (fase: { nome: string; descritivo: string; artefato_ids: string[] }) => {
-    console.log('Criando fase com dados:', fase)
-    console.log("Artefatos IDs:", fase.artefato_ids)
     const response = await fetch(`${urlBase}/fases`, {
         method: 'POST',
         headers: {
@@ -52,10 +53,6 @@ export const deleteFase = async (id: string) => {
     }
     return response.json()
 }
-import { toast } from "sonner";
-import { Fase } from "../interface/Fase";
-
-const ulrBase = process.env.NEXT_PUBLIC_ENDERECO_API
 
 async function getFasesService(): Promise<Fase[] | undefined> {
     try {
