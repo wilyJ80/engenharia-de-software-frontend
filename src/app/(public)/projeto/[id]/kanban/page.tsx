@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import Kanban from "./Kanban";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
